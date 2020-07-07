@@ -1,0 +1,2817 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+                 Alex Russell (slightlyoff@chromium.org)
+
+  landslide modifications: Adam Zapletal (adamzap@gmail.com)
+                           Nicolas Perriault (nperriault@gmail.com)
+-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Lesson 2: ROS API and Build Tools</title>
+    <!-- Styles -->
+    
+    <link rel="stylesheet" media="print" href="file:///usr/local/lib/python2.7/dist-packages/landslide-1.1.6-py2.7.egg/landslide/themes/default/css/print.css">
+    <link rel="stylesheet" media="screen, projection" href="file:///usr/local/lib/python2.7/dist-packages/landslide-1.1.6-py2.7.egg/landslide/themes/default/css/screen.css">
+    
+    
+    <!-- /Styles -->
+    <!-- Javascripts -->
+    
+    <script type="text/javascript" src="file:///usr/local/lib/python2.7/dist-packages/landslide-1.1.6-py2.7.egg/landslide/themes/default/js/slides.js"></script>
+    
+    
+    
+    <!-- /Javascripts -->
+</head>
+<body>
+  <div id="blank"></div>
+  <div class="presentation">
+    <div id="current_presenter_notes">
+      <div id="presenter_note"></div>
+    </div>
+    <div class="slides">
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-1">
+          <div class="inner">
+            
+            <header><h1>Lesson 2: ROS API and Build Tools</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>This lesson is intended to be an hour long crash course in the ROS 2 Dashing API and build tools.</li>
+<li>After this lesson you should be able to code and build a rudimentary ROS 2 application.</li>
+<li>It should be noted, that since this is a &quot;crash course&quot; we are giving you a pre-configured Docker environment call ADE.<ul>
+<li>We will not cover setting up the ROS environment.</li>
+<li>This will be left as an exercise to the reader.</li>
+<li>As much as possible we have used the tooling available <em>ROS 2 Dashing desktop full</em> installation.</li>
+</ul>
+</li>
+<li>This crash course was written for ROS 2 Dashing.<ul>
+<li>ROS 2 Foxy is about to be released.</li>
+<li>This release is the first major, stable, release of ROS 2.</li>
+</ul>
+</li>
+<li>The next lesson, lesson 3, will show you how to use the ROS 2 command line interface.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              1/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-2">
+          <div class="inner">
+            
+            <header><h1>Before We Begin...</h1></header>
+            
+            
+            <section><img alt="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/jfk.jpg" class="align-center" src="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/jfk.jpg" style="width: 500px;" />
+<p><em>&quot;We choose to go to the moon, not because it is easy, but because it is hard.&quot;</em></p>
+<p><strong>ROS is hard. There are many topics you must learn to become a skilled robotocist. We try to make it easy, but be aware the path ahead is difficult. You will get stuck. You will get frustrated. You will need help</strong></p>
+<p><em>The good news is, all of this is OK and completely normal; there are resources out there to help!</em></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              2/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-3">
+          <div class="inner">
+            
+            <header><h1>Getting Help!</h1></header>
+            
+            
+            <section><p><strong>ROS has a ton of resources to help you be succeed. You should be aware of these before you begin.</strong></p>
+<ul class="simple">
+<li>We have our own QA website like Stack Overflow called ROS Answers.<ul>
+<li><a class="reference external" href="https://answers.ros.org/questions/">http://answers.ros.org</a></li>
+<li>ROS answers actually predates the rise of Stack Overflow!</li>
+</ul>
+</li>
+<li>Check out ROS Discourse. It is the community hub for news and discussion.<ul>
+<li><a class="reference external" href="https://discourse.ros.org/">https://discourse.ros.org/</a></li>
+<li><em>DO NOT</em> ask questions on discourse.</li>
+</ul>
+</li>
+<li>We have a very large ROS wiki. It is mostly ROS 1.<ul>
+<li><a class="reference external" href="http://wiki.ros.org/">http://wiki.ros.org/</a></li>
+<li>Most of the content is still highly useful.</li>
+</ul>
+</li>
+<li>Most of this talk comes from the ROS 2 documentation.<ul>
+<li><a class="reference external" href="https://index.ros.org/doc/ros2/">https://index.ros.org/doc/ros2/</a></li>
+<li>This is probably where you should look.</li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-4">
+          <div class="inner">
+            
+            <header><h1>Other and/or Unofficial Resources</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>The ROS / Robotics Sub Reddits are Great!</li>
+<li>There is an &quot;unofficial&quot; <a class="reference external" href="https://discord.com/invite/HnVcz5a">ROS Discord</a>.<ul>
+<li>Please try using ROS Answers first.</li>
+</ul>
+</li>
+<li>We have a yearly ROS developers conference <a class="reference external" href="https://roscon.ros.org/2020/">ROSCon.</a><ul>
+<li>Most of old talks are free on the web.</li>
+</ul>
+</li>
+<li>We're not big on social media but we're busy on the twitter.<ul>
+<li><a class="reference external" href="https://twitter.com/openroboticsorg">&#64;OpenRoboticsOrg</a> is a bit more active.</li>
+<li><a class="reference external" href="https://twitter.com/rosorg">&#64;ROSOrg</a> &quot;Official&quot; ROS announcements.</li>
+</ul>
+</li>
+<li><a class="reference external" href="https://www.openrobotics.org/">Open Robotics</a> is the non-profit that administers ROS and Ignition Gazebo.<ul>
+<li>We take donations and take contract work from time to time.</li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              4/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-5">
+          <div class="inner">
+            
+            <header><h1>History of ROS</h1></header>
+            
+            
+            <section><p><em>PR2 Image</em></p>
+<ul class="simple">
+<li>Let's go back to the early 2000's.</li>
+<li>Open Source is growing, but Windows dominates.</li>
+<li>What about Robots?:<ul>
+<li>Robots are expensive and mainly for mass manufacturing and R&amp;D.</li>
+<li>Mostly is &quot;real-time&quot; control systems. Just make arms move the same way over and over.</li>
+<li>Not a lot of Open Source.</li>
+</ul>
+</li>
+<li>~2006, Former Google VPs decide to work on Robots.<ul>
+<li>Create a company called <a class="reference external" href="https://en.wikipedia.org/wiki/Willow_Garage">Willow Garage.</a></li>
+<li>From this org we get OpenCV, PCL, ROS, PR2 Robot, and many spin outs.</li>
+</ul>
+</li>
+<li>~2012 Willow Garage folds, Open Robotics emerges.<ul>
+<li>2017 ROS 2 Begins to move ROS out of the lab (it was already out of the lab).</li>
+<li>Address security and robustness concerns.</li>
+<li>Add RTOS support and support other OS's.</li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              5/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-6">
+          <div class="inner">
+            
+            <header><h1>Concepts that Motivate ROS</h1></header>
+            
+            
+            <section><p>ROS's design was informed by <em>design patterns</em> that were successfully used in prior robotic systems. We can't cover each of these in detail, but reading about them will help you better understand ROS.</p>
+<ul class="simple">
+<li><strong>Processes / Threads ==&gt; ROS Nodes</strong> -- A ROS Node is a self contained execution process, like a program. ROS is really a lot of tooling for running a bunch of programs in parallel.</li>
+<li><strong>Buses / PubSub ==&gt; ROS Topics</strong> -- The backbone of ROS is a <a class="reference external" href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">publish/subscribe bus</a>. If you have ever used ZeroMQ, RabbitMQ, or ModBus, ROS topics are very similar.</li>
+<li><strong>Serialization ==&gt; ROS Messages / ROS Bags</strong> -- ROS uses a predefined messages to move data over topics. This allows data to be <a class="reference external" href="https://en.wikipedia.org/wiki/Serialization">serialized</a> between nodes in different programming languages. An analog would be Google Protocol Buffers. ROS can be written to file, called a bag. A good analogy is a python pickle file.</li>
+<li><strong>Black Board Pattern  ==&gt; ROS Params</strong> -- A <a class="reference external" href="https://en.wikipedia.org/wiki/Blackboard_(design_pattern)">blackboard</a> is a way to create global variables between nodes/programs. A good analogy would be Redis.</li>
+<li><strong>Synchronous Remote Procedure Call (RPC)  ==&gt; ROS Services</strong> -- A ROS service is a program that can be called by another program. The caller is blocked until the callee returns.  This is formerly called a <a class="reference external" href="https://en.wikipedia.org/wiki/Remote_procedure_call">remote procedure call</a>.</li>
+<li><strong>Asynchronous Remote Procedure Call (RPC)  ==&gt; ROS Actions</strong> -- A ROS action is a program that can be called by another program. The caller is <strong>not</strong> blocked until the callee returns.</li>
+<li><strong>State Machines ==&gt; ROS Life cycles</strong> -- <a class="reference external" href="https://en.wikipedia.org/wiki/Finite-state_machine">State machines</a> are a tool to move between states, or modes. State machines are a useful way to model machine behavior.</li>
+<li><strong>Matrix Math for 3D Operations ==&gt; URDF and TF</strong> -- TF, short for transform, and URDF (universal robot description format) are tools for automatically <a class="reference external" href="https://en.wikipedia.org/wiki/Matrix_(mathematics)">calculating robot geometry using matrix math</a> .</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              6/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-7">
+          <div class="inner">
+            
+            <header><h1>Jumping in the Deep End</h1></header>
+            
+            
+            <section><p>Let's start ADE and install / update deps</p>
+<ul class="simple">
+<li>First things first, let's make sure everything is ready to go.</li>
+<li>Now is a good time to hit pause on the video make sure you have installed the requirements.</li>
+<li>Install ADE as per Autoware Instructions.</li>
+<li>Now were going to update the system, install ROS dashing, and a couple tools.</li>
+</ul>
+<pre><span></span>ade start
+ade enter
+<span class="nb">source</span> /opt/ros/dashing/setup.bash
+sudo apt update
+sudo apt install ros-dashing-turtlesim
+sudo apt install ros-dashing-rqt-*
+sudo apt-install byobu
+</pre>
+<p>You should now be ready for the class!</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              7/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-8">
+          <div class="inner">
+            
+            <header><h1>Some Nomenclature as we Begin</h1></header>
+            
+            
+            <section><ul class="simple">
+<li><strong>Package</strong> -- A collection of code.</li>
+<li><strong>Workspace</strong> -- A workspace is a collection of source code / ROS packages that will run on a robot. It has a uniform directory structure.  A good analogy is python virtual env, or &quot;project&quot; in most IDEs.</li>
+<li><strong>Overlay</strong> -- A second workspace with more/different/new packages. If there are multiple versions of a package/code then the one at the bottom is used.</li>
+<li><strong>Underlay</strong> -- The workspace, underneath an overlay, we're aware this is confusing.</li>
+<li><strong>Colcon</strong> -- The ROS 2 build tool. Think of it as a layer above CMake/Make/SetupTools that helps these tools work together smoothly.</li>
+</ul>
+<p>This is a bit confusing. You may ask yourself why we have our own build tool.  The short of it is that the ROS ecosystem consists of tens of thousands of developers, working on thousands of packages, across a handful of platforms, using multiple languages. We needed a flexible system to build code and one didn't exist at the time, and still doesn't exist.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-9">
+          <div class="inner">
+            
+            <header><h1>Let's Get Started</h1></header>
+            
+            
+            <section><p>As we're diving headfirst into ROS our first job is to checkout a repository of examples and build it. Roughly the steps to do this are as follows.</p>
+<ul class="simple">
+<li>Fire up a terminal manager inside the container. I use byobu. You can use whatever you want. You can also fire up 3 real terminals and call <cite>ade enter</cite> on them.</li>
+<li>Source the ROS setup.bash file so we have the right version of ROS in our path.</li>
+<li>Make a workspace called <cite>ros2_example_ws</cite>. We usually use <cite>_ws</cite> to indicate a workspace.</li>
+<li>Clone an example repository and change to the dashing branch.<ul>
+<li>Generally ROS repos have a branch per release.</li>
+</ul>
+</li>
+<li>Use Colcon to build the source.</li>
+</ul>
+<pre><span></span><span class="nb">source</span> /opt/ros/dashing/setup.bash
+mkdir -p ~/ros2_example_ws/src
+<span class="nb">cd</span> ~/ros2_example_ws
+git clone https://github.com/ros2/examples src/examples
+<span class="nb">cd</span> ~/ros2_example_ws/src/examples/
+git checkout dashing
+<span class="nb">cd</span> ~/ros2_example_ws
+colcon build --symlink-install
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              9/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-10">
+          <div class="inner">
+            
+            <header><h1>Nodes and Publishers</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>The core of ROS is the ROS pub/sub bus. In ROS parlance this is called <cite>topic</cite>.<ul>
+<li>A topic has a <cite>message type</cite> that is published on the bus. These messages are defined in a yaml file and define the serialization/deserialization format for ROS messages.</li>
+<li>ROS has a lot of built in message types. There are lots of pre-defined messages for controlling a robot, distributing sensor data, and understanding the geometry of your robot.</li>
+<li>ROS publishers produce messages and slowly or as quickly as they need to.</li>
+<li>A ROS subscriber, <cite>subscribes</cite> to a <cite>topic</cite> and then does things with the information.</li>
+</ul>
+</li>
+<li>ROS has lots of built-in tools for managing topics. You can list them, echo (watch) them, rename them (called remap), and store them to file (called bagging).</li>
+<li>ROS <cite>Nodes</cite> are basically programs, or processes that run concurrently on ROS.<ul>
+<li>A ROS node can publish to one or more topics.</li>
+<li>That same node can subscribe to other topics.</li>
+<li>Many nodes subscribe to topics, process the data, and publish the results.</li>
+<li>ROS has tooling to start and stop multiple nodes at the same time.</li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              10/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-11">
+          <div class="inner">
+            
+            <header><h1>Preparing to Run a ROS Node</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Open a new terminal, in Byobu you can do this by pressing <cite>F2</cite>.</li>
+<li>First we need to source the <cite>setup.bash</cite> file for our <cite>workspace.</cite> This will help ROS find the programs we built.<ul>
+<li><cite>source ./ros2_example_ws/install/setup.bash</cite></li>
+<li>Protip: you can find any file using <cite>find ./ -name &lt;file name&gt;</cite></li>
+</ul>
+</li>
+<li><strong>ROS Best Practice</strong> <em>ALWAYS</em> build and execute in different terminals.<ul>
+<li>The build terminal should source the global ROS setup.bash file (i.e. /opt/ros/dashing/setup.bash).</li>
+<li>The execution terminal should source the <cite>setup.bash</cite> of your workspace</li>
+<li>This is a common failure mode for new users. If something seems weird or funky. Create a new terminal and source the correct bash file.</li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              11/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-12">
+          <div class="inner">
+            
+            <header><h1>Let's Run a Simple C++ Publisher Node.</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>ROS has an advanced, and fairly complex CLI interface. We'll cover it in depth in our next lesson.</li>
+<li>We are going to ask ros to run the EXECUTABLE <cite>publisher_lambda</cite> in our WORKSPACE named <cite>examples_rclcpp_minimal_publisher</cite>.</li>
+<li>The syntax for doing this is <cite>ros2 run &lt;WORKSPACE&gt; &lt;EXECUTABLE&gt;</cite></li>
+<li>To run our publishing node, let's run the following command in our execution terminal: <cite>ros2 run examples_rclcpp_minimal_publisher publisher_lambda</cite></li>
+<li>If everything works you should see something like this:</li>
+</ul>
+<pre><span></span>kscottz@ade:~$ ros2 run examples_rclcpp_minimal_publisher publisher_lambda
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_publisher<span class="o">]</span>: Publishing: <span class="s1">&#39;Hello, world! 0&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_publisher<span class="o">]</span>: Publishing: <span class="s1">&#39;Hello, world! 1&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_publisher<span class="o">]</span>: Publishing: <span class="s1">&#39;Hello, world! 2&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_publisher<span class="o">]</span>: Publishing: <span class="s1">&#39;Hello, world! 3&#39;</span>
+...
+</pre>
+<ul class="simple">
+<li>To exit the program press <cite>CTRL-C</cite></li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              12/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-13">
+          <div class="inner">
+            
+            <header><h1>What just happened?</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>We just executed a ROS node that publishes a simple string message to a topic called <cite>/topic</cite> twice a second.</li>
+<li>I'll show you how I know this with some tools. We'll cover these tools in detail next time.</li>
+</ul>
+<pre><span></span>kscottz@ade:~$ ros2 topic list
+/parameter_events
+/rosout
+/topic
+kscottz@ade:~$ ros2 topic <span class="nb">echo</span> /topic
+data: Hello, lambda world! <span class="m">63</span>
+---
+data: Hello, lambda world! <span class="m">64</span>
+---
+data: Hello, lambda world! <span class="m">65</span>
+---
+kscottz@ade:~$ ros2 topic hz /topic
+average rate: <span class="m">2</span>.000
+min: <span class="m">0</span>.500s max: <span class="m">0</span>.500s std dev: <span class="m">0</span>.00011s window: <span class="m">4</span>
+kscottz@ade:~$
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              13/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-14">
+          <div class="inner">
+            
+            <header><h1>Digging into the Code</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Let's take a look at the code. Like a lot of software there is more than one way to skin a cat. Let's look at the member function approach.</li>
+<li>Using your favorite editor open the following source file, <cite>./ros2_example_ws/src/examples/rclcpp/minimal_publisher/member_function.cpp</cite></li>
+<li><strong>rclcpp</strong> is an abbreviation of &quot;ROS Client Library C++&quot;, its the ROS C++ API</li>
+</ul>
+<table class="highlighttable"><tr><td class="linenos"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></td><td class="code"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;rclcpp/rclcpp.hpp&quot; // THIS the header file for ROS 2 C++ API</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;std_msgs/msg/string.hpp&quot; // This is header for the messages we</span><span class="cp"></span>
+                                   <span class="c1">// want to user</span>
+                                   <span class="c1">// These are usually auto generated.</span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono_literals</span><span class="p">;</span>
+
+<span class="cm">/* This example creates a subclass of Node and uses std::bind() to register a</span>
+<span class="cm">* member function as a callback from the timer. */</span>
+  <span class="c1">// Make a class called Minimal Publisher</span>
+  <span class="k">class</span> <span class="nc">MinimalPublisher</span> <span class="o">:</span> <span class="k">public</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span>
+  <span class="c1">// Have it inherit from the ROS Node Class</span>
+</pre>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              14/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-15">
+          <div class="inner">
+            
+            <header><h1>Let's Build our Node's Constructor</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>The <cite>MinimalPublisher</cite> constructor inherits from the RCLCPP Base Class, gives the name a node, and sets our counter.</li>
+<li>The next line creates a publisher object that publishes <cite>std_msgs::msg</cite>.</li>
+<li>The constructor then creates a callback to the function <cite>timer_callback</cite> that gets called every 500ms.</li>
+</ul>
+<pre><span></span><span class="k">class</span> <span class="nc">MinimalPublisher</span> <span class="o">:</span> <span class="k">public</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span> <span class="c1">// Inherit from ROS Node</span>
+<span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="n">MinimalPublisher</span><span class="p">()</span>
+    <span class="o">:</span> <span class="n">Node</span><span class="p">(</span><span class="s">&quot;minimal_publisher&quot;</span><span class="p">),</span> <span class="n">count_</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">// Set the node name</span>
+    <span class="p">{</span>   <span class="c1">//Create a publisher that pushes std_msgs::msg to the topic &quot;topic&quot;</span>
+      <span class="n">publisher_</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">create_publisher</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">String</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;topic&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+      <span class="n">timer_</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">create_wall_timer</span><span class="p">(</span> <span class="c1">// Call timer_callback every 500ms</span>
+      <span class="mi">500</span><span class="n">ms</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalPublisher</span><span class="o">::</span><span class="n">timer_callback</span><span class="p">,</span> <span class="k">this</span><span class="p">));</span>
+    <span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              15/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-16">
+          <div class="inner">
+            
+            <header><h1>Now to Handle the Callback</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>In the callback function we do the following:<ul>
+<li>Create the ROS <cite>std_msgs::msg::String()</cite> to send to our topic.</li>
+<li>Construct the message that will be pushed to the ROS Topic</li>
+<li>Log the results.</li>
+<li>Actually publish the newly constructed message.</li>
+</ul>
+</li>
+</ul>
+<pre><span></span><span class="k">private</span><span class="o">:</span>
+<span class="kt">void</span> <span class="n">timer_callback</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">auto</span> <span class="n">message</span> <span class="o">=</span> <span class="n">std_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">String</span><span class="p">();</span> <span class="c1">// create message</span>
+  <span class="n">message</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="s">&quot;Hello, world! &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">count_</span><span class="o">++</span><span class="p">);</span> <span class="c1">// Fill it up</span>
+  <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Publishing: &#39;%s&#39;&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span> <span class="c1">// Log it</span>
+  <span class="n">publisher_</span><span class="o">-&gt;</span><span class="n">publish</span><span class="p">(</span><span class="n">message</span><span class="p">);</span> <span class="c1">// Publish</span>
+<span class="p">}</span>
+<span class="c1">// Create our private member variables.</span>
+<span class="n">rclcpp</span><span class="o">::</span><span class="n">TimerBase</span><span class="o">::</span><span class="n">SharedPtr</span> <span class="n">timer_</span><span class="p">;</span>
+<span class="n">rclcpp</span><span class="o">::</span><span class="n">Publisher</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">String</span><span class="o">&gt;::</span><span class="n">SharedPtr</span> <span class="n">publisher_</span><span class="p">;</span>
+<span class="kt">size_t</span> <span class="n">count_</span><span class="p">;</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              16/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-17">
+          <div class="inner">
+            
+            <header><h1>Finally, Let's Create the Main for our Node</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>This last little bit creates the main node entry point.</li>
+<li>Initializes <cite>rcpcpp</cite> with the values from the command line.</li>
+<li>Run's the MinimalPublisher, until a terminate is given</li>
+<li>Finally the node cleans up everything and exits.</li>
+</ul>
+<pre><span></span><span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span> <span class="c1">// Init RCL</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">spin</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">MinimalPublisher</span><span class="o">&gt;</span><span class="p">());</span><span class="c1">// Run the minimal publish</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">shutdown</span><span class="p">();</span> <span class="c1">// Cleanup on shut down.</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              17/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-18">
+          <div class="inner">
+            
+            <header><h1>Exercise:  Modify and Build this Node</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Let's try to make a few modification to our node for practice.<ul>
+<li>Make it run at 10Hz (100ms) instead of 500.</li>
+<li>Change the topic name from &quot;topic&quot; to &quot;greetings.&quot;</li>
+<li>Change the message &quot;Hello Open Road.&quot;</li>
+<li>Change the node name from <cite>minimal_publisher</cite>, <cite>revenge_of_minimal_publisher</cite></li>
+</ul>
+</li>
+<li>Once you make these changes<ul>
+<li>Save the file.</li>
+<li>Toggle over to your execution window run</li>
+<li>Run <cite>colcon build</cite></li>
+<li>In your execution window run <cite>ros2 run examples_rclcpp_minimal_publisher publisher_member_function</cite></li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              18/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-19">
+          <div class="inner">
+            
+            <header><h1>Let's Try Subscribing.</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>The pattern here is similar to publishing.</li>
+<li>We basically inherit from the Node class, and define the topic and message we want.</li>
+<li>Whenever that topic is published we hit a callback.</li>
+<li>If everything is correctly configured the file is at<ul>
+<li>/ros2_example_ws/src/examples/rclcpp/minimal_subscriber/member_function.cpp</li>
+</ul>
+</li>
+</ul>
+<pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;rclcpp/rclcpp.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;std_msgs/msg/string.hpp&quot;</span><span class="cp"></span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_1</span><span class="p">;</span>
+<span class="c1">// Again we inherit the public interface of a ROS node.</span>
+<span class="k">class</span> <span class="nc">MinimalSubscriber</span> <span class="o">:</span> <span class="k">public</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span>
+<span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+  <span class="n">MinimalSubscriber</span><span class="p">()</span> <span class="c1">// Construct our node, calling it minimal_subscriber</span>
+  <span class="o">:</span> <span class="n">Node</span><span class="p">(</span><span class="s">&quot;minimal_subscriber&quot;</span><span class="p">)</span>
+  <span class="p">{</span> <span class="c1">// Create a subscription, to messages of the format stdmsg:msg:String</span>
+    <span class="n">subscription_</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">create_subscription</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">String</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="c1">// Subscribe to the topic, &quot;topic&quot; and set a callback for when things are pub&#39;d</span>
+    <span class="s">&quot;topic&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalSubscriber</span><span class="o">::</span><span class="n">topic_callback</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_1</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              19/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-20">
+          <div class="inner">
+            
+            <header><h1>More Subscriber</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>The subscriber node looks fairly similar to our publisher but instead of publishing on a regular callback, we get a callback when a new message hits our topic.</li>
+</ul>
+<table class="highlighttable"><tr><td class="linenos"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></td><td class="code"><pre><span></span><span class="k">private</span><span class="o">:</span>
+  <span class="c1">// Whenever we get a new messaged published on our topic</span>
+  <span class="c1">// this callback will be executed.</span>
+  <span class="kt">void</span> <span class="n">topic_callback</span><span class="p">(</span><span class="k">const</span> <span class="n">std_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">String</span><span class="o">::</span><span class="n">SharedPtr</span> <span class="n">msg</span><span class="p">)</span> <span class="k">const</span>
+  <span class="p">{</span>
+    <span class="c1">// Log the message that we are subscribed to</span>
+    <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;I heard: &#39;%s&#39;&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">Subscription</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">String</span><span class="o">&gt;::</span><span class="n">SharedPtr</span> <span class="n">subscription_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// This is effectively the same boiler plate from last time.</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">spin</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">MinimalSubscriber</span><span class="o">&gt;</span><span class="p">());</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">shutdown</span><span class="p">();</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              20/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-21">
+          <div class="inner">
+            
+            <header><h1>Let's Modify the Subscriber</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>In the publisher we changed the name of our publisher topic to <cite>greetings.</cite></li>
+<li>Let's change the subscribed topic to <cite>greetings</cite>.</li>
+<li>Note that there are a lot of ways to change topic names, modifying source is just one approach. Often we just <cite>remap</cite> topics instead of changing source.</li>
+<li>Once you have modified the subscriber run <cite>colocon build</cite> (it will build everything)</li>
+<li>Open another terminal, source the bash file, and start the publisher.<ul>
+<li><cite>ros2 run examples_rclcpp_minimal_publisher publisher_member_function</cite></li>
+</ul>
+</li>
+<li>Now run our subscriber.<ul>
+<li><cite>ros2 run examples_rclcpp_minimal_subscriber subscriber_member_function</cite></li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              21/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-22">
+          <div class="inner">
+            
+            <header><h1>The Result</h1></header>
+            
+            
+            <section><p>If everything went well you should have two screens. The first screen with the publisher should be spitting out the following</p>
+<pre><span></span><span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>revenge_of_minimal_publisher<span class="o">]</span>: Publishing: <span class="s1">&#39;Hello, Open Road! 1000&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>revenge_of_minimal_publisher<span class="o">]</span>: Publishing: <span class="s1">&#39;Hello, Open Road! 1001&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>revenge_of_minimal_publisher<span class="o">]</span>: Publishing: <span class="s1">&#39;Hello, Open Road! 1002&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>revenge_of_minimal_publisher<span class="o">]</span>: Publishing: <span class="s1">&#39;Hello, Open Road! 1003&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>revenge_of_minimal_publisher<span class="o">]</span>: Publishing: <span class="s1">&#39;Hello, Open Road! 1004&#39;</span>
+</pre>
+<p>The subscriber screen should be pushing out:</p>
+<pre><span></span><span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_subscriber<span class="o">]</span>: I heard: <span class="s1">&#39;Hello, Open Road! 1000&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_subscriber<span class="o">]</span>: I heard: <span class="s1">&#39;Hello, Open Road! 1001&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_subscriber<span class="o">]</span>: I heard: <span class="s1">&#39;Hello, Open Road! 1002&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_subscriber<span class="o">]</span>: I heard: <span class="s1">&#39;Hello, Open Road! 1003&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_subscriber<span class="o">]</span>: I heard: <span class="s1">&#39;Hello, Open Road! 1004&#39;</span>
+</pre>
+<p><strong>You can terminate both of these programs with `CTRL-C`</strong></p>
+<p><em>Congratulations, you now know the three most important ROS components, nodes, publishers, and subscribers.</em></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              22/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-23">
+          <div class="inner">
+            
+            <header><h1>Making Things Happen with Services</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Publishing and subscribing nodes are the bread and butter of ROS. This pattern is great for moving around a lot of data, and processing it quickly.</li>
+<li>However, we often want our robots to respond to data. To construct simple behaviors in ROS we use <cite>services</cite>.</li>
+<li>A service is a robotic task that can be performed <em>synchronously</em>, which is just a fancy word for, &quot;while you wait&quot;.</li>
+<li>A good analogy for services would be a regular old function call. In most programs when you call a function, the code making the call waits for the function to return before proceeding.</li>
+<li>A few toy examples of services for autonomous driving would be:<ul>
+<li>Turning Lights Off/On.</li>
+<li>Checking a sensor and returning the results.</li>
+<li>Lock / Unlock a door or window.</li>
+<li>Beeping a horn.</li>
+</ul>
+</li>
+<li>Services can be called via the command line or through an API call within another node.</li>
+<li>In ROS services are hosted within a ROS Node, and they can co-exist with other services as well as publishers and subscribers.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              23/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-24">
+          <div class="inner">
+            
+            <header><h1>C++ Service Example</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>As a toy example of a ROS service we are going to make a node that offers an &quot;AddTwoInts&quot; service.</li>
+<li>What will happen is the service has two inputs, and returns a single output.</li>
+<li>There is a full tutorial <a class="reference external" href="https://index.ros.org/doc/ros2/Tutorials/Writing-A-Simple-Cpp-Service-And-Client/">about the process here</a>. It goes into more detail and it is worth looking at.</li>
+</ul>
+<p>Let's start by looking at a prebuilt <cite>srv</cite> file for this tutorial. If you were writing this service from scratch you would need to build this <cite>srv</cite> file yourself, but for this example there is one ready for us already. We'll use less to peek into the srv file.</p>
+<p>Run the following: <cite>less /opt/ros/dashing/share/example_interfaces/srv/AddTwoInts.srv</cite></p>
+<p>The file should have the following:</p>
+<pre><span></span><span class="l l-Scalar l-Scalar-Plain">int64 a</span>     <span class="c1"># &lt;== An input, of type int64, called a</span>
+<span class="l l-Scalar l-Scalar-Plain">int64 b</span>     <span class="c1"># &lt;== An input, of type int64, called b</span>
+<span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">int64 sum</span>   <span class="c1"># &lt;== An output, of type int64, called sum</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              24/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-25">
+          <div class="inner">
+            
+            <header><h1>Defining A Service</h1></header>
+            
+            
+            <section><p>Essentially our service is a remote procedure call of a function that looks like this in pseudocode:
+<cite>int64 sum = AddTwoInts(int64 a, int64b);</cite>.</p>
+<p>Let's take a look at the C++ code that defines the service. Use your favorite text editor to open the following file:  <cite>./ros2_example_ws/src/examples/rclcpp/minimal_service/main.cpp</cite>.</p>
+<pre><span></span> <span class="c1">// This hpp file is autogenerated from the srv file.</span>
+ <span class="cp">#include</span> <span class="cpf">&quot;example_interfaces/srv/add_two_ints.hpp&quot;</span><span class="cp"></span>
+ <span class="cp">#include</span> <span class="cpf">&quot;rclcpp/rclcpp.hpp&quot;// ROS header.</span><span class="cp"></span>
+ <span class="c1">// Scope resolution to our services.</span>
+ <span class="k">using</span> <span class="n">AddTwoInts</span> <span class="o">=</span> <span class="n">example_interfaces</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">AddTwoInts</span><span class="p">;</span>
+ <span class="c1">// shared pointer to logger</span>
+ <span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span><span class="o">::</span><span class="n">SharedPtr</span> <span class="n">g_node</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+ <span class="c1">// Perform the service call</span>
+ <span class="kt">void</span> <span class="nf">handle_service</span><span class="p">(</span>
+   <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">rmw_request_id_t</span><span class="o">&gt;</span> <span class="n">request_header</span><span class="p">,</span><span class="c1">// Header with timestamp etc</span>
+   <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">AddTwoInts</span><span class="o">::</span><span class="n">Request</span><span class="o">&gt;</span> <span class="n">request</span><span class="p">,</span>    <span class="c1">// This is the input, two int64 a,b</span>
+   <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">AddTwoInts</span><span class="o">::</span><span class="n">Response</span><span class="o">&gt;</span> <span class="n">response</span><span class="p">)</span>  <span class="c1">// This response is int64 sum</span>
+ <span class="p">{</span>
+   <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">request_header</span><span class="p">;</span>
+   <span class="n">RCLCPP_INFO</span><span class="p">(</span> <span class="c1">// Logger message.</span>
+     <span class="n">g_node</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span>
+     <span class="s">&quot;request: %&quot;</span> <span class="n">PRId64</span> <span class="s">&quot; + %&quot;</span> <span class="n">PRId64</span><span class="p">,</span> <span class="n">request</span><span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span> <span class="n">request</span><span class="o">-&gt;</span><span class="n">b</span><span class="p">);</span>
+  <span class="n">response</span><span class="o">-&gt;</span><span class="n">sum</span> <span class="o">=</span> <span class="n">request</span><span class="o">-&gt;</span><span class="n">a</span> <span class="o">+</span> <span class="n">request</span><span class="o">-&gt;</span><span class="n">b</span><span class="p">;</span> <span class="c1">// the actual function.</span>
+<span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              25/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-26">
+          <div class="inner">
+            
+            <header><h1>ROS 2 Service Main</h1></header>
+            
+            
+            <section><table class="highlighttable"><tr><td class="linenos"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></td><td class="code"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+  <span class="c1">// get global ROS pointer</span>
+  <span class="n">g_node</span> <span class="o">=</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span><span class="o">::</span><span class="n">make_shared</span><span class="p">(</span><span class="s">&quot;minimal_service&quot;</span><span class="p">);</span>
+  <span class="c1">// Create a service, of type AddTwoInts, named add_two_ints, that points to handle_service</span>
+  <span class="k">auto</span> <span class="n">server</span> <span class="o">=</span> <span class="n">g_node</span><span class="o">-&gt;</span><span class="n">create_service</span><span class="o">&lt;</span><span class="n">AddTwoInts</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;add_two_ints&quot;</span><span class="p">,</span> <span class="n">handle_service</span><span class="p">);</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">spin</span><span class="p">(</span><span class="n">g_node</span><span class="p">);</span> <span class="c1">// run until shutdown</span>
+  <span class="n">rclcpp</span><span class="o">::</span><span class="n">shutdown</span><span class="p">();</span>
+  <span class="n">g_node</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</td></tr></table><p>The main entry point is pretty simple. It does the following.</p>
+<ul class="simple">
+<li>Initialize the program.</li>
+<li>Get a shared pointer to the ROS node interface.</li>
+<li>Create the service, of type AddTwoInts, named add_two_ints, pointing to the function <cite>handle_service.</cite></li>
+<li>Run the node until shutdown.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              26/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-27">
+          <div class="inner">
+            
+            <header><h1>Let's Build and Run our Service</h1></header>
+            
+            
+            <section><p>First we will fire up our service! The syntax for this is <cite>ros2 run &lt;pkg&gt; &lt;program&gt;</cite>.</p>
+<pre><span></span>kscottz@ade:~$ ros2 run examples_rclcpp_minimal_service service_main
+</pre>
+<p>At this point nothing should happen. We need to <em>call</em> the service. To do that we'll use a command line tool that's a little... long.</p>
+<p>We'll talk about this more in the next lesson, but the syntax is roughly, <cite>ros2 service call &lt;service_name&gt; &lt;service_call_format&gt; &lt;actual_data&gt;</cite>.</p>
+<p>In this case our service name is <cite>/add_two_ints</cite> and the data type can be found in <cite>example_interfaces/AddTwoInts</cite>, and the input is yaml encased in quotation marks. Move over to a new terminal and enter the following:</p>
+<pre><span></span>kscottz@ade:~/ros2_example_ws$ ros2 service call /add_two_ints example_interfaces/AddTwoInts <span class="s2">&quot;{a: 1, b: 1}&quot;</span>
+waiting <span class="k">for</span> service to become available...
+requester: making request: example_interfaces.srv.AddTwoInts_Request<span class="o">(</span><span class="nv">a</span><span class="o">=</span><span class="m">1</span>, <span class="nv">b</span><span class="o">=</span><span class="m">1</span><span class="o">)</span>
+
+response:
+example_interfaces.srv.AddTwoInts_Response<span class="o">(</span><span class="nv">sum</span><span class="o">=</span><span class="m">2</span><span class="o">)</span>
+</pre>
+<p>Now switch back to your original terminal, you should see something like this:</p>
+<pre><span></span>kscottz@ade:~$ ros2 run examples_rclcpp_minimal_client client_main
+<span class="m">3</span><span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_service<span class="o">]</span>: Incoming request
+a: <span class="m">1</span> b: <span class="m">1</span>
+</pre>
+<p>Congratulations, you just made your first service call!</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              27/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-28">
+          <div class="inner">
+            
+            <header><h1>Using a Service in Code</h1></header>
+            
+            
+            <section><p>We just called our service from the command line to test it, but more often than not we would want to do this in source code.</p>
+<p>Let's look at an example of how to do that. In your editor or using less take a look at the following file: <cite>/home/kscottz/ros2_example_ws/src/examples/rclcpp/minimal_client/main.cpp</cite></p>
+<pre><span></span><span class="c1">// snipped</span>
+<span class="cp">#include</span> <span class="cpf">&quot;example_interfaces/srv/add_two_ints.hpp&quot; // include the service header file.</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;rclcpp/rclcpp.hpp&quot;</span><span class="cp"></span>
+<span class="c1">// Scope resolution on underlying call signature.</span>
+<span class="k">using</span> <span class="n">AddTwoInts</span> <span class="o">=</span> <span class="n">example_interfaces</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">AddTwoInts</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+   <span class="n">rclcpp</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span> <span class="c1">//  init ROS C++ interface.</span>
+   <span class="k">auto</span> <span class="n">node</span> <span class="o">=</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span><span class="o">::</span><span class="n">make_shared</span><span class="p">(</span><span class="s">&quot;minimal_client&quot;</span><span class="p">);</span> <span class="c1">// shared node memory.</span>
+   <span class="k">auto</span> <span class="n">client</span> <span class="o">=</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">create_client</span><span class="o">&lt;</span><span class="n">AddTwoInts</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;add_two_ints&quot;</span><span class="p">);</span> <span class="c1">// create client interface.</span>
+   <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">client</span><span class="o">-&gt;</span><span class="n">wait_for_service</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span> <span class="p">{</span><span class="c1">// poll for service to come online</span>
+     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">ok</span><span class="p">())</span> <span class="p">{</span>  <span class="c1">// if service doesn&#39;t come online, exit gracefully</span>
+       <span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span>
+           <span class="s">&quot;client interrupted while waiting for service to appear.&quot;</span><span class="p">);</span>
+       <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;waiting for service to appear...&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              28/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-29">
+          <div class="inner">
+            
+            <header><h1>C++ Service Client Part Deux</h1></header>
+            
+            
+            <section><pre><span></span> <span class="c1">// shared memory to request</span>
+ <span class="k">auto</span> <span class="n">request</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">AddTwoInts</span><span class="o">::</span><span class="n">Request</span><span class="o">&gt;</span><span class="p">();</span>
+ <span class="n">request</span><span class="o">-&gt;</span><span class="n">a</span> <span class="o">=</span> <span class="mi">41</span><span class="p">;</span>  <span class="c1">// set the input values</span>
+ <span class="n">request</span><span class="o">-&gt;</span><span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>   <span class="c1">// set the input values</span>
+ <span class="k">auto</span> <span class="n">result_future</span> <span class="o">=</span> <span class="n">client</span><span class="o">-&gt;</span><span class="n">async_send_request</span><span class="p">(</span><span class="n">request</span><span class="p">);</span> <span class="c1">// Send the request</span>
+ <span class="k">if</span> <span class="p">(</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">spin_until_future_complete</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">result_future</span><span class="p">)</span> <span class="o">!=</span> <span class="c1">// spin until result</span>
+    <span class="n">rclcpp</span><span class="o">::</span><span class="n">executor</span><span class="o">::</span><span class="n">FutureReturnCode</span><span class="o">::</span><span class="n">SUCCESS</span><span class="p">)</span>
+ <span class="p">{</span>
+    <span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;service call failed :(&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+ <span class="p">}</span>
+ <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">result_future</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="c1">// Get the result</span>
+ <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;result of %&quot;</span> <span class="n">PRId64</span> <span class="s">&quot; + %&quot;</span> <span class="n">PRId64</span> <span class="s">&quot; = %&quot;</span> <span class="n">PRId64</span><span class="p">,</span>
+    <span class="n">request</span><span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span> <span class="n">request</span><span class="o">-&gt;</span><span class="n">b</span><span class="p">,</span> <span class="n">result</span><span class="o">-&gt;</span><span class="n">sum</span><span class="p">);</span> <span class="c1">// print the result</span>
+<span class="n">rclcpp</span><span class="o">::</span><span class="n">shutdown</span><span class="p">();</span> <span class="c1">// shutdown</span>
+<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              29/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-30">
+          <div class="inner">
+            
+            <header><h1>Let's Run Our Client</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Now we're going to run our service and then call it from the client.</li>
+<li>You'll need two terminals to do this. Remember <cite>F2/F3</cite> let you open and switch to a new terminal in ADE.</li>
+</ul>
+<p>First fire up your service if it isn't already running.</p>
+<pre><span></span>$ ros2 run examples_rclcpp_minimal_service service_main
+</pre>
+<p>Now start the client in a second terminal.</p>
+<pre><span></span>$ ros2 run examples_rclcpp_minimal_client client_main
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_client<span class="o">]</span>: Result of add_two_ints: <span class="k">for</span> <span class="m">41</span> + <span class="nv">1</span> <span class="o">=</span> <span class="m">42</span>
+</pre>
+<p>The client should fire off a request right away. You can see the result.</p>
+<p>Finally, toggle back to the service.</p>
+<pre><span></span>$ ~/ros2_example_ws$ ros2 run examples_rclcpp_minimal_service service_main
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_service<span class="o">]</span>: Incoming request
+a: <span class="m">41</span> b: <span class="m">1</span>
+</pre>
+<p>You can see the debug input  has been printed to the terminal.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              30/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-31">
+          <div class="inner">
+            
+            <header><h1>ROS C++ Actions</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Actions are ROS / ROS 2's answers to asynchronous remote procedure calls.</li>
+<li>Notice how quickly how fast our service call happened. It was more or less instant.</li>
+<li>Actions are the preferred approach for things that may not happen instantaneously.</li>
+<li>The canonical example of a ROS Action would be sending the robot a command to navigate to a way point.</li>
+<li>The process of navigation is going to take a bit of time, what we want to do is to kick off the process, wait for updates, and then once things are complete we get a result.</li>
+<li>Just like services there are two parts of an action. The action server and the action client. <em>Note that there can be more than one client.</em></li>
+<li>Actions become fairly complex as they can serve multiple clients. This means the action may need to keep track of multiple concurrent connections.<ul>
+<li>Since action servers  can get overwhelmed by requests, they need to <em>accept</em> every request before proceeding to process it.</li>
+<li>The clients can also <em>cancel</em> at any time, so that needs to be handled.</li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              31/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-32">
+          <div class="inner">
+            
+            <header><h1>Parts of an Action</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Find the action. An action server may be down!</li>
+<li>The Action Request -- the service <em>can</em> decline to take an action.</li>
+<li>The Action being accepted.</li>
+<li>The Action being canceled. Sometimes the client changes its mind.</li>
+<li>The action &quot;feedback&quot;, sending back info from server to client.</li>
+<li>Send the result to the client -- the result could be the thing happened succesfully, or not!</li>
+</ul>
+
+
+<h1>Fibonacci Action</h1>
+<p>For our action server we're going to create a toy example, this example will calculate the <cite>Nth number</cite> in the <a class="reference external" href="https://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci series</a>. So, what will happen when we call this toy action?</p>
+<ul class="simple">
+<li>We will call the action with a single integer indicating the <cite>sequence number</cite> of the Fibonacci number we want.</li>
+<li>The action will update us as it calculates the sequence of numbers and update it us as it calculates a new one.</li>
+<li>When the action gets to our desired number in the sequence, it will return the results.</li>
+<li>For example, if we called action with the input 7, we would get the seventh Fibonacci number. Which means, given the series  &lt;0, 1, 1, 2, 3, 5, 8&gt;, would be the number 8.</li>
+<li>The action should update us along the way in the calculation. It should return the series of numbers every time it calculates a new number.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              32/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-33">
+          <div class="inner">
+            
+            <header><h1>Action Definition Files</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Actions use a definition file to build all of the ROS boiler plate like cross language header/definition files for use in multiple programming languages.</li>
+<li>These action files are written in YAML and use the <cite>*.action</cite> suffix.</li>
+<li>The ROS meta build system colcon will use these action files to auto-magically generate all of the header files.</li>
+</ul>
+<p>Let's take a look at an action file.</p>
+<pre><span></span>/opt/ros/dashing/share/example_interfaces/action/Fibonacci.action
+<span class="c1"># Goal -- the input, the order we want like 7</span>
+int32 order
+---
+<span class="c1"># Result -- the *final result*, here the list of values 0,1,1,2,3,5,8....</span>
+int32<span class="o">[]</span> sequence
+---
+<span class="c1"># Feedback -- the *intermediate result* so &lt;0&gt;,&lt;0,1&gt;,&lt;0,1,1&gt;,&lt;0,1,1,2&gt; ...</span>
+int32<span class="o">[]</span> sequence
+Fibonacci.action <span class="o">(</span>END<span class="o">)</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              33/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-34">
+          <div class="inner">
+            
+            <header><h1>Really quick, let's look under the hood!</h1></header>
+            
+            
+            <section><p>As we said previously, the <cite>*.action</cite> is used to auto-generate a bunch of other files. We can see this if we go down one directory to msg.</p>
+<p>What we'll see is that the <cite>*.action</cite> file is used to generate a bunch of ROS topic messages mapping to states in our action.</p>
+<p>Essentially a ROS action is built upon ROS nodes and ROS topics</p>
+<pre><span></span>kscottz@ade:/opt/ros/dashing/share/example_interfaces/action/msg$ <span class="nb">cd</span> ~/
+kscottz@ade:~$ <span class="nb">cd</span> /opt/ros/dashing/share/example_interfaces/action/msg/
+kscottz@ade:/opt/ros/dashing/share/example_interfaces/action/msg$ ls
+FibonacciActionFeedback.msg  FibonacciAction.msg        FibonacciFeedback.msg  FibonacciResult.msg
+FibonacciActionGoal.msg      FibonacciActionResult.msg  FibonacciGoal.msg
+kscottz@ade:/opt/ros/dashing/share/example_interfaces/action/msg$ less FibonacciActionGoal.msg
+<span class="c1"># This file is automatically generated by rosidl-generator</span>
+std_msgs/Header header
+actionlib_msgs/GoalID goal_id
+FibonacciGoal goal
+FibonacciActionGoal.msg <span class="o">(</span>END<span class="o">)</span>
+kscottz@ade:/opt/ros/dashing/share/example_interfaces/action/msg$ <span class="nb">cd</span> ~
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              34/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-35">
+          <div class="inner">
+            
+            <header><h1>Let's take a look at Action Server</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Let's take a look at how our Fibonacci action server.</li>
+<li>Use your favorite text editor to open: <cite>/home/kscottz/ros2_example_ws/src/examples/rclcpp/minimal_action_server/member_functions.cpp</cite></li>
+</ul>
+<pre><span></span><span class="o">&lt;</span><span class="n">headers</span> <span class="n">cut</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">MinimalActionServer</span> <span class="o">:</span> <span class="k">public</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>  <span class="c1">// Pre-defined interface files.</span>
+   <span class="k">using</span> <span class="n">Fibonacci</span> <span class="o">=</span> <span class="n">example_interfaces</span><span class="o">::</span><span class="n">action</span><span class="o">::</span><span class="n">Fibonacci</span><span class="p">;</span>
+   <span class="k">using</span> <span class="n">GoalHandleFibonacci</span> <span class="o">=</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">ServerGoalHandle</span><span class="o">&lt;</span><span class="n">Fibonacci</span><span class="o">&gt;</span><span class="p">;</span>
+   <span class="k">explicit</span> <span class="nf">MinimalActionServer</span><span class="p">(</span><span class="k">const</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span> <span class="o">&amp;</span> <span class="n">options</span> <span class="o">=</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="p">())</span>
+   <span class="o">:</span> <span class="n">Node</span><span class="p">(</span><span class="s">&quot;minimal_action_server&quot;</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+   <span class="p">{</span>
+     <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="p">;</span>
+     <span class="c1">// SCARY call to define that this is a Fib. action and what functions</span>
+     <span class="c1">// attach to what events in the action lifecycle.</span>
+     <span class="k">this</span><span class="o">-&gt;</span><span class="n">action_server_</span> <span class="o">=</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">create_server</span><span class="o">&lt;</span><span class="n">Fibonacci</span><span class="o">&gt;</span><span class="p">(</span>
+     <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_base_interface</span><span class="p">(),</span>      <span class="c1">// The action server is basically</span>
+     <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_clock_interface</span><span class="p">(),</span>     <span class="c1">// a node and we need return pointers</span>
+     <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_logging_interface</span><span class="p">(),</span>   <span class="c1">// to all of standard interaces.</span>
+     <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_waitables_interface</span><span class="p">(),</span>
+     <span class="s">&quot;fibonacci&quot;</span><span class="p">,</span>  <span class="c1">// and bind our member functions to topic events.</span>
+     <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalActionServer</span><span class="o">::</span><span class="n">handle_goal</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_1</span><span class="p">,</span> <span class="n">_2</span><span class="p">),</span>
+     <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalActionServer</span><span class="o">::</span><span class="n">handle_cancel</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_1</span><span class="p">),</span>
+     <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalActionServer</span><span class="o">::</span><span class="n">handle_accepted</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_1</span><span class="p">));</span>
+   <span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              35/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-36">
+          <div class="inner">
+            
+            <header><h1>Actions: Accept or Cancel</h1></header>
+            
+            
+            <section><p>Let's deal with accepting a goal, or canceling a goal.</p>
+<pre><span></span><span class="k">private</span><span class="o">:</span>
+  <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">Server</span><span class="o">&lt;</span><span class="n">Fibonacci</span><span class="o">&gt;::</span><span class="n">SharedPtr</span> <span class="n">action_server_</span><span class="p">;</span>
+
+  <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalResponse</span> <span class="n">handle_goal</span><span class="p">(</span>
+   <span class="k">const</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalUUID</span> <span class="o">&amp;</span> <span class="n">uuid</span><span class="p">,</span> <span class="c1">// Each request gets a UUID</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Fibonacci</span><span class="o">::</span><span class="n">Goal</span><span class="o">&gt;</span> <span class="n">goal</span><span class="p">)</span> <span class="c1">// The goal object</span>
+  <span class="p">{</span>
+     <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Received goal request with order %d&quot;</span><span class="p">,</span> <span class="n">goal</span><span class="o">-&gt;</span><span class="n">order</span><span class="p">);</span>
+     <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">uuid</span><span class="p">;</span>
+     <span class="c1">// Let&#39;s reject sequences that are over 9000</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">order</span> <span class="o">&gt;</span> <span class="mi">9000</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">return</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalResponse</span><span class="o">::</span><span class="n">REJECT</span><span class="p">;</span>
+       <span class="p">}</span> <span class="c1">// respond with &quot;yes, we&#39;ll process this request.</span>
+   <span class="k">return</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalResponse</span><span class="o">::</span><span class="n">ACCEPT_AND_EXECUTE</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">rclcpp_action</span><span class="o">::</span><span class="n">CancelResponse</span> <span class="n">handle_cancel</span><span class="p">(</span>
+   <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GoalHandleFibonacci</span><span class="o">&gt;</span> <span class="n">goal_handle</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Received request to cancel goal&quot;</span><span class="p">);</span>
+   <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">goal_handle</span><span class="p">;</span>
+   <span class="k">return</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">CancelResponse</span><span class="o">::</span><span class="n">ACCEPT</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              36/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-37">
+          <div class="inner">
+            
+            <header><h1>The Meat of the Fib Function</h1></header>
+            
+            
+            <section><pre><span></span> <span class="kt">void</span> <span class="nf">execute</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GoalHandleFibonacci</span><span class="o">&gt;</span> <span class="n">goal_handle</span><span class="p">)</span>
+ <span class="p">{</span> <span class="c1">// This is the meaty part of the function</span>
+    <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Executing goal&quot;</span><span class="p">);</span>
+    <span class="n">rclcpp</span><span class="o">::</span><span class="n">Rate</span> <span class="n">loop_rate</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">goal</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">get_goal</span><span class="p">();</span> <span class="c1">// this is our goal value</span>
+    <span class="k">auto</span> <span class="n">feedback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Fibonacci</span><span class="o">::</span><span class="n">Feedback</span><span class="o">&gt;</span><span class="p">();</span> <span class="c1">// this is our feedback object</span>
+    <span class="k">auto</span> <span class="o">&amp;</span> <span class="n">sequence</span> <span class="o">=</span> <span class="n">feedback</span><span class="o">-&gt;</span><span class="n">sequence</span><span class="p">;</span> <span class="c1">// this is our list of fib values.</span>
+    <span class="n">sequence</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">sequence</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Fibonacci</span><span class="o">::</span><span class="n">Result</span><span class="o">&gt;</span><span class="p">();</span> <span class="c1">// This is the final result.</span>
+
+    <span class="c1">// Do fib as long as ROS is ok!</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">goal</span><span class="o">-&gt;</span><span class="n">order</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">ok</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Check if there is a cancel request</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">is_canceling</span><span class="p">())</span> <span class="p">{</span> <span class="c1">// Handle a cancel result!</span>
+      <span class="n">result</span><span class="o">-&gt;</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">;</span>
+      <span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">canceled</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+      <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Goal Canceled&quot;</span><span class="p">);</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Update sequence</span>
+    <span class="n">sequence</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">sequence</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">sequence</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+    <span class="c1">// Publish feedback</span>
+    <span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">publish_feedback</span><span class="p">(</span><span class="n">feedback</span><span class="p">);</span>
+    <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Publish Feedback&quot;</span><span class="p">);</span>
+
+    <span class="n">loop_rate</span><span class="p">.</span><span class="n">sleep</span><span class="p">();</span>
+    <span class="p">}</span>
+
+  <span class="c1">// Check if goal is done</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">ok</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">result</span><span class="o">-&gt;</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">;</span>
+    <span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">succeed</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+    <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Goal Succeeded&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">handle_accepted</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GoalHandleFibonacci</span><span class="o">&gt;</span> <span class="n">goal_handle</span><span class="p">)</span>
+<span class="p">{</span> <span class="c1">// Our request was accepted, fire off a new thread.</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="p">;</span>
+  <span class="c1">// this needs to return quickly to avoid blocking the executor, so spin up a new thread</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalActionServer</span><span class="o">::</span><span class="n">execute</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_1</span><span class="p">),</span> <span class="n">goal_handle</span><span class="p">}.</span><span class="n">detach</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              37/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-38">
+          <div class="inner">
+            
+            <header><h1>Let's Put our Class into an Executable</h1></header>
+            
+            
+            <section><table class="highlighttable"><tr><td class="linenos"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></td><td class="code"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="n">rclcpp</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+
+   <span class="k">auto</span> <span class="n">action_server</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">MinimalActionServer</span><span class="o">&gt;</span><span class="p">();</span>
+
+   <span class="n">rclcpp</span><span class="o">::</span><span class="n">spin</span><span class="p">(</span><span class="n">action_server</span><span class="p">);</span>
+
+   <span class="n">rclcpp</span><span class="o">::</span><span class="n">shutdown</span><span class="p">();</span>
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              38/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-39">
+          <div class="inner">
+            
+            <header><h1>Let's Run Our Action and Call It.</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Ordinarily you would call <cite>colcon build</cite> in your workspace to build the source code. We're just inspecting this method so this isn't necessary.</li>
+<li>We'll start the action server and then call it manually using the ROS 2 CLI.</li>
+</ul>
+<pre><span></span>kscottz@ade:~/ros2_example_ws$ ros2 run examples_rclcpp_minimal_action_server action_server_member_functions
+</pre>
+<p>Now we're going to manually call the server from the ROS 2 CLI. We'll cover this in more depth in the next lesson. If you're using byobu use <cite>F3</cite> to go to a second terminal or <cite>F2</cite> to make a new one.</p>
+<pre><span></span>$ ros2 action send_goal /fibonacci example_interfaces/action/Fibonacci <span class="s1">&#39;{order: 10}&#39;</span>
+Waiting <span class="k">for</span> an action server to become available...
+Sending goal:
+   order: <span class="m">10</span>
+
+Goal accepted with ID: 0c1b3779c7ea44b69d54c6e1cfac3ff6
+
+Result:
+   sequence: <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span>, <span class="m">8</span>, <span class="m">13</span>, <span class="m">21</span>, <span class="m">34</span>, <span class="m">55</span><span class="o">]</span>
+
+Goal finished with status: SUCCEEDED
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              39/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-40">
+          <div class="inner">
+            
+            <header><h1>Meanwhile, Back at The Server</h1></header>
+            
+            
+            <section><p>You can use <cite>F3</cite> to see what happened to our action and its status updates.</p>
+<pre><span></span><span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_server<span class="o">]</span>: Received goal request
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_server<span class="o">]</span>: Executing goal...
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_server<span class="o">]</span>: Publishing feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_server<span class="o">]</span>: Publishing feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_server<span class="o">]</span>: Publishing feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_server<span class="o">]</span>: Publishing feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span><span class="o">])</span>
+... SNIP ...
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_server<span class="o">]</span>: Returning result: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span>, <span class="m">8</span>, <span class="m">13</span>, <span class="m">21</span>, <span class="m">34</span>, <span class="m">55</span><span class="o">])</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              40/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-41">
+          <div class="inner">
+            
+            <header><h1>Action Client</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Let's take at the client side API implementation. Open the file:</li>
+</ul>
+<p><cite>~/ros2_example_ws/src/examples/rclcpp/ minimal_action_client/member_functions.cpp</cite></p>
+<ul class="simple">
+<li>We'll address the basic implementation but that directory has additional examples for other use cases and things like canceling an action mid-process.</li>
+<li>It is worth understanding what we're doing, it is more than sending just the goal. Roughly this class does the following:<ul>
+<li>Check's for a connection to ROS, and the action server.</li>
+<li>Sends the goal.</li>
+<li>Checks that the goal was &quot;accepted&quot; after sending.</li>
+<li>Updates the log/screen as interim feedback gets sent.</li>
+<li>Receives the final results.</li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              41/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-42">
+          <div class="inner">
+            
+            <header><h1>Let's Create A Client Class</h1></header>
+            
+            
+            <section><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;example_interfaces/action/fibonacci.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;rclcpp/rclcpp.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;rclcpp_action/rclcpp_action.hpp&quot;</span><span class="cp"></span>
+<span class="k">class</span> <span class="nc">MinimalActionClient</span> <span class="o">:</span> <span class="k">public</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span>
+<span class="p">{</span>
+   <span class="k">public</span><span class="o">:</span> <span class="c1">// looks familiar, pulling in the action interface, and the goal type</span>
+   <span class="k">using</span> <span class="n">Fibonacci</span> <span class="o">=</span> <span class="n">example_interfaces</span><span class="o">::</span><span class="n">action</span><span class="o">::</span><span class="n">Fibonacci</span><span class="p">;</span>
+   <span class="k">using</span> <span class="n">GoalHandleFibonacci</span> <span class="o">=</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">ClientGoalHandle</span><span class="o">&lt;</span><span class="n">Fibonacci</span><span class="o">&gt;</span><span class="p">;</span>
+
+   <span class="k">explicit</span> <span class="nf">MinimalActionClient</span><span class="p">(</span><span class="k">const</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span> <span class="o">&amp;</span> <span class="n">node_options</span> <span class="o">=</span> <span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="p">())</span>
+   <span class="o">:</span> <span class="n">Node</span><span class="p">(</span><span class="s">&quot;minimal_action_client&quot;</span><span class="p">,</span> <span class="n">node_options</span><span class="p">),</span> <span class="n">goal_done_</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span>
+   <span class="p">{</span>  <span class="c1">// Create a client interface.</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">client_ptr_</span> <span class="o">=</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">create_client</span><span class="o">&lt;</span><span class="n">Fibonacci</span><span class="o">&gt;</span><span class="p">(</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_base_interface</span><span class="p">(),</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_graph_interface</span><span class="p">(),</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_logging_interface</span><span class="p">(),</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_node_waitables_interface</span><span class="p">(),</span>
+      <span class="s">&quot;fibonacci&quot;</span><span class="p">);</span>
+      <span class="c1">// Create a time and have callback to send goal in 500ms</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">timer_</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">create_wall_timer</span><span class="p">(</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">),</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalActionClient</span><span class="o">::</span><span class="n">send_goal</span><span class="p">,</span> <span class="k">this</span><span class="p">));</span>
+   <span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              42/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-43">
+          <div class="inner">
+            
+            <header><h1>Sending the Goal</h1></header>
+            
+            
+            <section><p>Our client constructor above set a time to call <cite>send_goal</cite> after 500ms. We'll bind our member functions to the action events and then send the goals.</p>
+<pre><span></span><span class="c1">// method to check if goal is done</span>
+<span class="kt">bool</span> <span class="nf">is_goal_done</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+   <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">goal_done_</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">send_goal</span><span class="p">()</span>
+<span class="p">{</span>
+   <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="p">;</span>
+   <span class="k">this</span><span class="o">-&gt;</span><span class="n">timer_</span><span class="o">-&gt;</span><span class="n">cancel</span><span class="p">();</span>
+   <span class="k">this</span><span class="o">-&gt;</span><span class="n">goal_done_</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+   <span class="c1">// fail to connect to logger.</span>
+   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">client_ptr_</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Action client not initialized&quot;</span><span class="p">);</span>
+   <span class="p">}</span>
+   <span class="c1">// fail to find the server</span>
+   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">client_ptr_</span><span class="o">-&gt;</span><span class="n">wait_for_action_server</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span> <span class="p">{</span>
+       <span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Action server not available after waiting&quot;</span><span class="p">);</span>
+       <span class="k">this</span><span class="o">-&gt;</span><span class="n">goal_done_</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+   <span class="k">return</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="c1">// create the goal msg type and set</span>
+   <span class="k">auto</span> <span class="n">goal_msg</span> <span class="o">=</span> <span class="n">Fibonacci</span><span class="o">::</span><span class="n">Goal</span><span class="p">();</span>
+   <span class="n">goal_msg</span><span class="p">.</span><span class="n">order</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+   <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Sending goal&quot;</span><span class="p">);</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              43/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-44">
+          <div class="inner">
+            
+            <header><h1>More Send_Goal</h1></header>
+            
+            
+            <section><pre><span></span>   <span class="k">auto</span> <span class="n">send_goal_options</span> <span class="o">=</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">Client</span><span class="o">&lt;</span><span class="n">Fibonacci</span><span class="o">&gt;::</span><span class="n">SendGoalOptions</span><span class="p">();</span>
+   <span class="c1">// response callback (success/failure)</span>
+   <span class="n">send_goal_options</span><span class="p">.</span><span class="n">goal_response_callback</span> <span class="o">=</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalActionClient</span><span class="o">::</span><span class="n">goal_response_callback</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_1</span><span class="p">);</span>
+   <span class="c1">// server feedback callback</span>
+   <span class="n">send_goal_options</span><span class="p">.</span><span class="n">feedback_callback</span> <span class="o">=</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalActionClient</span><span class="o">::</span><span class="n">feedback_callback</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_1</span><span class="p">,</span> <span class="n">_2</span><span class="p">);</span>
+   <span class="c1">// result callback bind</span>
+   <span class="n">send_goal_options</span><span class="p">.</span><span class="n">result_callback</span> <span class="o">=</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MinimalActionClient</span><span class="o">::</span><span class="n">result_callback</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_1</span><span class="p">);</span>
+   <span class="k">auto</span> <span class="n">goal_handle_future</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">client_ptr_</span><span class="o">-&gt;</span><span class="n">async_send_goal</span><span class="p">(</span><span class="n">goal_msg</span><span class="p">,</span> <span class="n">send_goal_options</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              44/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-45">
+          <div class="inner">
+            
+            <header><h1>Handling the Responses</h1></header>
+            
+            
+            <section><p>Next up we create our private member variables and define the functions that get called with the goal response and the periodic feedback.</p>
+<pre><span></span><span class="k">private</span><span class="o">:</span>
+   <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">Client</span><span class="o">&lt;</span><span class="n">Fibonacci</span><span class="o">&gt;::</span><span class="n">SharedPtr</span> <span class="n">client_ptr_</span><span class="p">;</span>
+   <span class="n">rclcpp</span><span class="o">::</span><span class="n">TimerBase</span><span class="o">::</span><span class="n">SharedPtr</span> <span class="n">timer_</span><span class="p">;</span>
+   <span class="kt">bool</span> <span class="n">goal_done_</span><span class="p">;</span>
+   <span class="c1">// handle the response to our request</span>
+   <span class="kt">void</span> <span class="nf">goal_response_callback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_future</span><span class="o">&lt;</span><span class="n">GoalHandleFibonacci</span><span class="o">::</span><span class="n">SharedPtr</span><span class="o">&gt;</span> <span class="n">future</span><span class="p">)</span>
+   <span class="p">{</span>
+      <span class="k">auto</span> <span class="n">goal_handle</span> <span class="o">=</span> <span class="n">future</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">goal_handle</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Goal was rejected by server&quot;</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Goal accepted by server, waiting for result&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="c1">// handle the feedback calls, these should be the format of feedback.</span>
+   <span class="kt">void</span> <span class="nf">feedack_callback</span><span class="p">(</span>
+   <span class="n">GoalHandleFibonacci</span><span class="o">::</span><span class="n">SharedPtr</span><span class="p">,</span>
+   <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Fibonacci</span><span class="o">::</span><span class="n">Feedback</span><span class="o">&gt;</span> <span class="n">feedback</span><span class="p">)</span>
+   <span class="p">{</span>
+      <span class="n">RCLCPP_INFO</span><span class="p">(</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span>
+      <span class="s">&quot;Next number in sequence received: %&quot;</span> <span class="n">PRId64</span><span class="p">,</span>
+      <span class="n">feedback</span><span class="o">-&gt;</span><span class="n">sequence</span><span class="p">.</span><span class="n">back</span><span class="p">());</span>
+   <span class="p">}</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              45/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-46">
+          <div class="inner">
+            
+            <header><h1>Handling The Result</h1></header>
+            
+            
+            <section><table class="highlighttable"><tr><td class="linenos"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></td><td class="code"><pre><span></span><span class="c1">// handle result callback</span>
+<span class="kt">void</span> <span class="nf">result_callback</span><span class="p">(</span><span class="k">const</span> <span class="n">GoalHandleFibonacci</span><span class="o">::</span><span class="n">WrappedResult</span> <span class="o">&amp;</span> <span class="n">result</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="k">this</span><span class="o">-&gt;</span><span class="n">goal_done_</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+   <span class="k">switch</span> <span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">code</span><span class="p">)</span> <span class="p">{</span>
+     <span class="k">case</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">ResultCode</span><span class="o">::</span><span class="nl">SUCCEEDED</span><span class="p">:</span>
+       <span class="k">break</span><span class="p">;</span>
+     <span class="k">case</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">ResultCode</span><span class="o">::</span><span class="nl">ABORTED</span><span class="p">:</span>
+       <span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Goal was aborted&quot;</span><span class="p">);</span>
+       <span class="k">return</span><span class="p">;</span>
+     <span class="k">case</span> <span class="n">rclcpp_action</span><span class="o">::</span><span class="n">ResultCode</span><span class="o">::</span><span class="nl">CANCELED</span><span class="p">:</span>
+        <span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Goal was canceled&quot;</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+     <span class="k">default</span><span class="o">:</span>
+       <span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Unknown result code&quot;</span><span class="p">);</span>
+       <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;Result received&quot;</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">number</span> <span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">result</span><span class="o">-&gt;</span><span class="n">sequence</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span> <span class="s">&quot;%&quot;</span> <span class="n">PRId64</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>  <span class="c1">// class MinimalActionClient</span>
+</pre>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              46/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-47">
+          <div class="inner">
+            
+            <header><h1>Running our Client Class</h1></header>
+            
+            
+            <section><p>Finally the main function that attaches to our node class. It simply creates a class instance and runs until completion.</p>
+<table class="highlighttable"><tr><td class="linenos"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></td><td class="code"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="n">rclcpp</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+   <span class="k">auto</span> <span class="n">action_client</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">MinimalActionClient</span><span class="o">&gt;</span><span class="p">();</span>
+
+   <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">action_client</span><span class="o">-&gt;</span><span class="n">is_goal_done</span><span class="p">())</span> <span class="p">{</span>
+     <span class="n">rclcpp</span><span class="o">::</span><span class="n">spin_some</span><span class="p">(</span><span class="n">action_client</span><span class="p">);</span>
+   <span class="p">}</span>
+
+   <span class="n">rclcpp</span><span class="o">::</span><span class="n">shutdown</span><span class="p">();</span>
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              47/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-48">
+          <div class="inner">
+            
+            <header><h1>Let's Run our Client</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>We'll start the action server the same way as before</li>
+</ul>
+<pre><span></span>kscottz@ade:~/ros2_example_ws$ ros2 run examples_rclcpp_minimal_action_server action_server_member_functions
+</pre>
+<p>Next we'll run our client.</p>
+<pre><span></span>kscottz@ade:~/ros2_example_ws$ ros2 run examples_rclcpp_minimal_action_client action_client_member_functions
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Waiting <span class="k">for</span> action server...
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Sending goal request...
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Goal accepted :<span class="o">)</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Received feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Received feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Received feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Received feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Received feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span>, <span class="m">8</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Received feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span>, <span class="m">8</span>, <span class="m">13</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Received feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span>, <span class="m">8</span>, <span class="m">13</span>, <span class="m">21</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Received feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span>, <span class="m">8</span>, <span class="m">13</span>, <span class="m">21</span>, <span class="m">34</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Received feedback: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span>, <span class="m">8</span>, <span class="m">13</span>, <span class="m">21</span>, <span class="m">34</span>, <span class="m">55</span><span class="o">])</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>minimal_action_client<span class="o">]</span>: Goal succeeded! Result: array<span class="o">(</span><span class="s1">&#39;i&#39;</span>, <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">5</span>, <span class="m">8</span>, <span class="m">13</span>, <span class="m">21</span>, <span class="m">34</span>, <span class="m">55</span><span class="o">])</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              48/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson2Basics.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-49">
+          <div class="inner">
+            
+            <header><h1>Wrapping Up...</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>We've just seen the set of API primitives upon which most ROS systems are made.</li>
+<li>Generally speaking, when you build a robot you work from simple to complex. You build the nodes and topics first, then the services, and finally the actions.</li>
+<li>While we addressed all of these topics with the C++ API there is an equivalent Python API that works similarly.</li>
+<li>Moreover, there are additional API primitives that you can check out.</li>
+<li>All of these examples are in the workspace that we created.</li>
+<li>I would encourage you to modify these examples to build a better idea of how they work.</li>
+</ul>
+<p><strong>Next time we'll cover the ROS 2 CLI</strong></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson2Basics.rst">Lesson2Basics.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              49/49
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div id="toc" class="sidebar hidden">
+    <h2>Table of Contents</h2>
+    <table>
+      <caption>Table of Contents</caption>
+      
+      <tr id="toc-row-1">
+        <th><a href="#slide1">Lesson 2: ROS API and Build Tools</a></th>
+        <td><a href="#slide1">1</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-2">
+        <th><a href="#slide2">Before We Begin...</a></th>
+        <td><a href="#slide2">2</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-3">
+        <th><a href="#slide3">Getting Help!</a></th>
+        <td><a href="#slide3">3</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-4">
+        <th><a href="#slide4">Other and/or Unofficial Resources</a></th>
+        <td><a href="#slide4">4</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-5">
+        <th><a href="#slide5">History of ROS</a></th>
+        <td><a href="#slide5">5</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-6">
+        <th><a href="#slide6">Concepts that Motivate ROS</a></th>
+        <td><a href="#slide6">6</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-7">
+        <th><a href="#slide7">Jumping in the Deep End</a></th>
+        <td><a href="#slide7">7</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-8">
+        <th><a href="#slide8">Some Nomenclature as we Begin</a></th>
+        <td><a href="#slide8">8</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-9">
+        <th><a href="#slide9">Let's Get Started</a></th>
+        <td><a href="#slide9">9</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-10">
+        <th><a href="#slide10">Nodes and Publishers</a></th>
+        <td><a href="#slide10">10</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-11">
+        <th><a href="#slide11">Preparing to Run a ROS Node</a></th>
+        <td><a href="#slide11">11</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-12">
+        <th><a href="#slide12">Let's Run a Simple C++ Publisher Node.</a></th>
+        <td><a href="#slide12">12</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-13">
+        <th><a href="#slide13">What just happened?</a></th>
+        <td><a href="#slide13">13</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-14">
+        <th><a href="#slide14">Digging into the Code</a></th>
+        <td><a href="#slide14">14</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-15">
+        <th><a href="#slide15">Let's Build our Node's Constructor</a></th>
+        <td><a href="#slide15">15</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-16">
+        <th><a href="#slide16">Now to Handle the Callback</a></th>
+        <td><a href="#slide16">16</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-17">
+        <th><a href="#slide17">Finally, Let's Create the Main for our Node</a></th>
+        <td><a href="#slide17">17</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-18">
+        <th><a href="#slide18">Exercise:  Modify and Build this Node</a></th>
+        <td><a href="#slide18">18</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-19">
+        <th><a href="#slide19">Let's Try Subscribing.</a></th>
+        <td><a href="#slide19">19</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-20">
+        <th><a href="#slide20">More Subscriber</a></th>
+        <td><a href="#slide20">20</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-21">
+        <th><a href="#slide21">Let's Modify the Subscriber</a></th>
+        <td><a href="#slide21">21</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-22">
+        <th><a href="#slide22">The Result</a></th>
+        <td><a href="#slide22">22</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-23">
+        <th><a href="#slide23">Making Things Happen with Services</a></th>
+        <td><a href="#slide23">23</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-24">
+        <th><a href="#slide24">C++ Service Example</a></th>
+        <td><a href="#slide24">24</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-25">
+        <th><a href="#slide25">Defining A Service</a></th>
+        <td><a href="#slide25">25</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-26">
+        <th><a href="#slide26">ROS 2 Service Main</a></th>
+        <td><a href="#slide26">26</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-27">
+        <th><a href="#slide27">Let's Build and Run our Service</a></th>
+        <td><a href="#slide27">27</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-28">
+        <th><a href="#slide28">Using a Service in Code</a></th>
+        <td><a href="#slide28">28</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-29">
+        <th><a href="#slide29">C++ Service Client Part Deux</a></th>
+        <td><a href="#slide29">29</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-30">
+        <th><a href="#slide30">Let's Run Our Client</a></th>
+        <td><a href="#slide30">30</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-31">
+        <th><a href="#slide31">ROS C++ Actions</a></th>
+        <td><a href="#slide31">31</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-32">
+        <th><a href="#slide32">Parts of an Action</a></th>
+        <td><a href="#slide32">32</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-33">
+        <th><a href="#slide33">Action Definition Files</a></th>
+        <td><a href="#slide33">33</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-34">
+        <th><a href="#slide34">Really quick, let's look under the hood!</a></th>
+        <td><a href="#slide34">34</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-35">
+        <th><a href="#slide35">Let's take a look at Action Server</a></th>
+        <td><a href="#slide35">35</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-36">
+        <th><a href="#slide36">Actions: Accept or Cancel</a></th>
+        <td><a href="#slide36">36</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-37">
+        <th><a href="#slide37">The Meat of the Fib Function</a></th>
+        <td><a href="#slide37">37</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-38">
+        <th><a href="#slide38">Let's Put our Class into an Executable</a></th>
+        <td><a href="#slide38">38</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-39">
+        <th><a href="#slide39">Let's Run Our Action and Call It.</a></th>
+        <td><a href="#slide39">39</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-40">
+        <th><a href="#slide40">Meanwhile, Back at The Server</a></th>
+        <td><a href="#slide40">40</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-41">
+        <th><a href="#slide41">Action Client</a></th>
+        <td><a href="#slide41">41</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-42">
+        <th><a href="#slide42">Let's Create A Client Class</a></th>
+        <td><a href="#slide42">42</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-43">
+        <th><a href="#slide43">Sending the Goal</a></th>
+        <td><a href="#slide43">43</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-44">
+        <th><a href="#slide44">More Send_Goal</a></th>
+        <td><a href="#slide44">44</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-45">
+        <th><a href="#slide45">Handling the Responses</a></th>
+        <td><a href="#slide45">45</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-46">
+        <th><a href="#slide46">Handling The Result</a></th>
+        <td><a href="#slide46">46</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-47">
+        <th><a href="#slide47">Running our Client Class</a></th>
+        <td><a href="#slide47">47</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-48">
+        <th><a href="#slide48">Let's Run our Client</a></th>
+        <td><a href="#slide48">48</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-49">
+        <th><a href="#slide49">Wrapping Up...</a></th>
+        <td><a href="#slide49">49</a></td>
+      </tr>
+      
+      
+    </table>
+  </div>
+  
+  <div id="help" class="sidebar hidden">
+    <h2>Help</h2>
+    <table>
+      <caption>Help</caption>
+      <tr>
+        <th>Table of Contents</th>
+        <td>t</td>
+      </tr>
+      <tr>
+        <th>Exposé</th>
+        <td>ESC</td>
+      </tr>
+      <tr>
+        <th>Full screen slides</th>
+        <td>e</td>
+      </tr>
+      <tr>
+        <th>Presenter View</th>
+        <td>p</td>
+      </tr>
+      <tr>
+        <th>Source Files</th>
+        <td>s</td>
+      </tr>
+      <tr>
+        <th>Slide Numbers</th>
+        <td>n</td>
+      </tr>
+      <tr>
+        <th>Toggle screen blanking</th>
+        <td>b</td>
+      </tr>
+      <tr>
+        <th>Show/hide slide context</th>
+        <td>c</td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>2</td>
+      </tr>
+      <tr>
+        <th>Help</th>
+        <td>h</td>
+      </tr>
+    </table>
+  </div>
+  <script>main()</script>
+</body>
+</html>

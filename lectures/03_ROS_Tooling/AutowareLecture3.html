@@ -1,0 +1,2433 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+                 Alex Russell (slightlyoff@chromium.org)
+
+  landslide modifications: Adam Zapletal (adamzap@gmail.com)
+                           Nicolas Perriault (nperriault@gmail.com)
+-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>The command line</title>
+    <!-- Styles -->
+    
+    <link rel="stylesheet" media="print" href="file:///usr/local/lib/python2.7/dist-packages/landslide-1.1.6-py2.7.egg/landslide/themes/default/css/print.css">
+    <link rel="stylesheet" media="screen, projection" href="file:///usr/local/lib/python2.7/dist-packages/landslide-1.1.6-py2.7.egg/landslide/themes/default/css/screen.css">
+    
+    
+    <!-- /Styles -->
+    <!-- Javascripts -->
+    
+    <script type="text/javascript" src="file:///usr/local/lib/python2.7/dist-packages/landslide-1.1.6-py2.7.egg/landslide/themes/default/js/slides.js"></script>
+    
+    
+    
+    <!-- /Javascripts -->
+</head>
+<body>
+  <div id="blank"></div>
+  <div class="presentation">
+    <div id="current_presenter_notes">
+      <div id="presenter_note"></div>
+    </div>
+    <div class="slides">
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-1">
+          <div class="inner">
+            
+            <header><h1>The command line</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>ROS is effectively Linux for Robots.</li>
+<li>From Last Time:<ul>
+<li>ROS has your cross platform build tools.</li>
+<li>ROS has ployglot builds.</li>
+</ul>
+</li>
+<li>Now lets talk about runtime.<ul>
+<li>ROS presents command line interface (CLI) for robot execution.</li>
+<li>Most of these commands follow a regular format.</li>
+<li>These commands have auto-tab complete (yay!)</li>
+<li>Most blank commands will spit out error or info.</li>
+<li>Most commands will behave nicely with <tt class="docutils literal"><span class="pre">--help</span></tt></li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              1/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-2">
+          <div class="inner">
+            
+            <header><h1>Let's Fire up ADE</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>It is worth noting this should work for any Ubuntu 18.04 machine.</li>
+<li>You'll have to do this every time you restart ADE!</li>
+</ul>
+<p>Let's setup our environment:</p>
+<pre class="literal-block">
+cd adehome
+export PATH=$PATH:$PWD
+cd AutowareAuto
+ade start
+ade enter
+
+source /opt/ros/dashing/setup.bash
+sudo apt update
+sudo apt install ros-dashing-turtlesim
+sudo apt install ros-dashing-rqt-*
+sudo apt install byobu
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              2/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-3">
+          <div class="inner">
+            
+            <header><h1><em>Example of --help</em></h1></header>
+            
+            
+            <section><p>Here is ros2 <tt class="docutils literal"><span class="pre">--help</span></tt>:</p>
+<pre class="literal-block">
+kscottz&#64;ade:~$ ros2 --help
+usage: ros2 [-h] Call `ros2 &lt;command&gt; -h` for more detailed usage. ...
+
+ros2 is an extensible command-line tool for ROS 2.
+
+optional arguments:
+-h, --help            show this help message and exit
+
+Commands:
+action     Various action related sub-commands
+bag        Various rosbag related sub-commands
+component  Various component related sub-commands
+daemon     Various daemon related sub-commands
+launch     Run a launch file
+lifecycle  Various lifecycle related sub-commands
+msg        Various msg related sub-commands
+multicast  Various multicast related sub-commands
+node       Various node related sub-commands
+param      Various param related sub-commands
+pkg        Various package related sub-commands
+run        Run a package specific executable
+security   Various security related sub-commands
+service    Various service related sub-commands
+srv        Various srv related sub-commands
+test       Run a ROS2 launch test
+topic      Various topic related sub-commands
+
+Call `ros2 &lt;command&gt; -h` for more detailed usage.
+</pre>
+<p>That's all your commands!</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-4">
+          <div class="inner">
+            
+            <header><h1>ROS 2 run</h1></header>
+            
+            
+            <section><p><tt class="docutils literal">ros2 run</tt> is used to execute ROS nodes.</p>
+<p>General format is <tt class="docutils literal">ros2 run &lt;package_name&gt; &lt;executable_name&gt; &lt;flags&gt;</tt></p>
+<ul class="simple">
+<li><em>TAB COMPLETIONS!</em> are baked in.</li>
+<li>Generally if tabbing works, you are good to go.</li>
+<li>Don't know a full package name? Try tabbing.</li>
+<li>Don't know the executables in a package?
+* TRY TABBING!!!</li>
+<li>Why don't we try starting this <cite>turtlesim node</cite>.</li>
+<li>In your terminal type <tt class="docutils literal">ros2 run turtlesim turtlesim_node</tt></li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              4/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-5">
+          <div class="inner">
+            
+            <header><h1>TA-DA! A wild ROS turtle appears</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>When you run <tt class="docutils literal">ros2 run turtlesim turtlesim_node</tt>, this should happen:</li>
+</ul>
+<img alt="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/turtlesim_start.png" src="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/turtlesim_start.png" style="width: 200px;" />
+<ul class="simple">
+<li>This is our simple virtual turtle. Don't worry if the turtle looks different.  Let's make the turtle move.<ul>
+<li>Press <tt class="docutils literal">F2</tt> to create a new terminal.</li>
+<li>Source <tt class="docutils literal">source /opt/ros/dashing/setup.bash</tt></li>
+<li>We're going to run another node, let's check out this <tt class="docutils literal">draw_square</tt>.</li>
+<li><tt class="docutils literal">ros2 run turtlesim draw_square</tt></li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              5/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-6">
+          <div class="inner">
+            
+            <header><h1>Moving your turtle</h1></header>
+            
+            
+            <section><p>If everything is setup correctly your turtle should move.</p>
+<img alt="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/turtlesim_square.png" src="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/turtlesim_square.png" style="width: 800px;" />
+<p>You can stop the simulation using <tt class="docutils literal">CTRL+C</tt></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              6/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-7">
+          <div class="inner">
+            
+            <header><h1>Let's explore what's happening</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>We have two terminals open, running two &quot;programs&quot;.<ul>
+<li>We have the <tt class="docutils literal">turtlesim</tt> &quot;program&quot; running in the first terminal.</li>
+<li>The <tt class="docutils literal">draw_square</tt> &quot;program&quot; is running in a second terminal.</li>
+<li>The two are communicating over ros topics.</li>
+</ul>
+</li>
+<li><em>What if we didn't know what was going on?</em></li>
+<li>What if we worked with a large team and a lot of programs, or nodes, were created by our team mates?</li>
+</ul>
+<p><cite>How can we figure out what nodes are running on our simulated robot?</cite></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              7/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-8">
+          <div class="inner">
+            
+            <header><h1>Inspecting nodes</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Open a new terminal by pressing <tt class="docutils literal">F2</tt></li>
+<li>Source your bash file <tt class="docutils literal">source /opt/ros/dashing/setup.bash</tt></li>
+</ul>
+<p>Let's try inspecting our running nodes</p>
+<pre><span></span>kscottz@ade:~$ <span class="nb">source</span> /opt/ros/dashing/setup.bash
+
+kscottz@ade:~$ ros2 node --help
+  Commands:
+    info  Output information about a node
+    list  Output a list of available nodes
+
+    Call <span class="sb">`</span>ros2 node &lt;command&gt; -h<span class="sb">`</span> <span class="k">for</span> more detailed usage.
+
+kscottz@ade:~$ ros2 node list --help
+  usage: ros2 node list <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--spin-time SPIN_TIME<span class="o">]</span> <span class="o">[</span>-a<span class="o">]</span> <span class="o">[</span>-c<span class="o">]</span>
+  Output a list of available nodes
+  optional arguments:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -a, --all             Display all nodes even hidden ones
+  -c, --count-nodes     Only display the number of nodes discovered
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-9">
+          <div class="inner">
+            
+            <header><h1>Let's try node list</h1></header>
+            
+            
+            <section><p>Let's try <tt class="docutils literal">ros2 node list</tt></p>
+<pre><span></span>kscottz@ade:~$ ros2 node list
+/draw_square  &lt;== This is the node moving the turtle.
+/turtlesim    &lt;== This is the node rendering the turtle.
+</pre>
+<p>We can see the two nodes we started.</p>
+<p>Can we dig down deeper into each of these nodes?</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              9/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-10">
+          <div class="inner">
+            
+            <header><h1>Let's try node info</h1></header>
+            
+            
+            <section><p>Let's try this <tt class="docutils literal">ros2 node info</tt> command!</p>
+<img alt="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/node_info.png" src="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/node_info.png" style="width: 400px;" />
+<p><em>WOW, THAT'S A LOT OF INFO!!!</em></p>
+<ul class="simple">
+<li>What's there?<ul>
+<li>Subscribers and message types.</li>
+<li>Publishers and message types.</li>
+<li>Services</li>
+<li>Actions</li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              10/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-11">
+          <div class="inner">
+            
+            <header><h1>ROS topic CLI interface</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Recall from last lesson that ROS topics are short hand for the ROS pub/sub bus.</li>
+<li>ROS topics by analogy:<ul>
+<li>If you have worked with <a class="reference external" href="https://en.wikipedia.org/wiki/RabbitMQ">RabbitMQ</a> or <a class="reference external" href="https://en.wikipedia.org/wiki/ZeroMQ">ZeroMQ</a> it is very similar.</li>
+<li>In terms of hardware if you have worked with <a class="reference external" href="https://en.wikipedia.org/wiki/Modbus">ModBus</a> ROS topics are the software equivalent.</li>
+<li>ROS messages are basically a serialization protocol. A good analogy would be <a class="reference external" href="https://en.wikipedia.org/wiki/Protocol_Buffers">Google protobuff</a>.</li>
+</ul>
+</li>
+<li>The short of it is that ROS nodes communicate over ROS topics, which are like phone numbers that anyone can dial into and listen.</li>
+<li>These topics have _namespaces_ which are kinda like phone numbers or file paths. These topic names can be changed, or remapped, to connect nodes.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              11/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-12">
+          <div class="inner">
+            
+            <header><h1>ros2 topic <em>&lt;xxxx&gt;</em></h1></header>
+            
+            
+            <section><p>Let's use help to see our options for this command.</p>
+<p>In your terminal run <tt class="docutils literal">ros2 topic <span class="pre">-h</span></tt></p>
+<p>Try this:</p>
+<pre><span></span>kscottz@ade:~$ ros2 topic
+usage: ros2 topic <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--include-hidden-topics<span class="o">]</span>
+    Call <span class="sb">`</span>ros2 topic &lt;command&gt; -h<span class="sb">`</span> <span class="k">for</span> more detailed usage. ...
+
+Various topic related sub-commands
+optional arguments:
+-h, --help                show this <span class="nb">help</span> message and <span class="nb">exit</span>
+--include-hidden-topics   Consider hidden topics as well
+Commands:
+  bw     Display bandwidth used by topic
+  delay  Display delay of topic from timestamp in header
+  <span class="nb">echo</span>   Output messages from a topic
+  hz     Print the average publishing rate to screen
+  info   Print information about a topic
+  list   Output a list of available topics
+  pub    Publish a message to a topic
+
+  Call <span class="sb">`</span>ros2 topic &lt;command&gt; -h<span class="sb">`</span> <span class="k">for</span> more detailed usage.
+</pre>
+<p>Interesting, some let us &quot;introspect&quot; the messages, look at performance, and even send off our own messages.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              12/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-13">
+          <div class="inner">
+            
+            <header><h1>Let's look at the topics in TurtleSim</h1></header>
+            
+            
+            <section><p>Let's start with <tt class="docutils literal">ros2 topic list</tt>.</p>
+<pre><span></span>kscottz@ade:~$ ros2 topic list -h
+usage: ros2 topic list <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--spin-time SPIN_TIME<span class="o">]</span> <span class="o">[</span>-t<span class="o">]</span> <span class="o">[</span>-c<span class="o">]</span>
+                      <span class="o">[</span>--include-hidden-topics<span class="o">]</span>
+
+Output a list of available topics
+optional arguments:
+-h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+--spin-time SPIN_TIME
+                      Spin <span class="nb">time</span> in seconds to <span class="nb">wait</span> <span class="k">for</span> discovery <span class="o">(</span>only
+                      applies when not using an already running daemon<span class="o">)</span>
+-t, --show-types      Additionally show the topic <span class="nb">type</span>
+-c, --count-topics    Only display the number of topics discovered
+--include-hidden-topics
+                     Consider hidden topics as well
+kscottz@ade:~$ ros2 topic list
+/parameter_events
+/rosout
+/turtle1/cmd_vel
+/turtle1/color_sensor
+/turtle1/pose
+kscottz@ade:~$
+</pre>
+<p>One thing of interest, note how <tt class="docutils literal">/turtle1/</tt> is in front of the last three topics. We call this a namespace.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              13/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-14">
+          <div class="inner">
+            
+            <header><h1>Digging into topics</h1></header>
+            
+            
+            <section><ul class="simple">
+<li><em>Echo</em> is an old Unix/Linux term that basically means print. We print, or echo the data on any given topic. Let's give it a shot.</li>
+<li>Why don't we take a look at <tt class="docutils literal">/turtle1/pose/</tt>?</li>
+<li>First, we'll look at the docs for echo using the <tt class="docutils literal"><span class="pre">-h</span></tt> or help flag.</li>
+</ul>
+<pre><span></span>kscottz@ade:~$ ros2 topic <span class="nb">echo</span> -h
+usage: ros2 topic <span class="nb">echo</span> <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--csv<span class="o">]</span> <span class="o">[</span>--full-length<span class="o">]</span>
+                       <span class="o">[</span>--truncate-length TRUNCATE_LENGTH<span class="o">]</span>
+                       topic_name <span class="o">[</span>message_type<span class="o">]</span>
+Output messages from a topic
+positional arguments:
+  topic_name            Name of the ROS topic to listen to <span class="o">(</span>e.g. <span class="s1">&#39;/chatter&#39;</span><span class="o">)</span>
+  message_type          Type of the ROS message <span class="o">(</span>e.g. <span class="s1">&#39;std_msgs/String&#39;</span><span class="o">)</span>
+optional arguments:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  --csv                 Output all recursive fields separated by commas <span class="o">(</span>e.g.
+                        <span class="k">for</span> plotting<span class="o">)</span>
+  --full-length, -f     Output all elements <span class="k">for</span> arrays, bytes, and string with
+                        a length &gt; <span class="s1">&#39;--truncate-length&#39;</span>, by default they are
+                        truncated after <span class="s1">&#39;--truncate-length&#39;</span> elements with
+                       <span class="s1">&#39;...&#39;</span><span class="err">&#39;</span>
+  --truncate-length TRUNCATE_LENGTH, -l TRUNCATE_LENGTH
+                       The length to truncate arrays, bytes, and string to
+                       <span class="o">(</span>default: <span class="m">128</span><span class="o">)</span>
+</pre>
+<p>Let's echo a topic, but there are a couple things to keep in mind!</p>
+<ul class="simple">
+<li>You need to give the full path to your topic.</li>
+<li><em>However, you can use tab complete to go fast.</em></li>
+<li>This will spit out <cite>a lot</cite> of data really fast.</li>
+<li>You can stop the command with <tt class="docutils literal">CTRL+C</tt>. This works for almost all CLI programs.</li>
+</ul>
+<p>You should see roughly the following...</p>
+<pre><span></span>kscottz@ade:~$ ros2 topic <span class="nb">echo</span> /turtle1/pose
+---
+x: <span class="m">6</span>.5681657791137695     &lt;-- X position of turtle
+y: <span class="m">5</span>.584629058837891      &lt;-- Y position of turtle
+theta: <span class="m">0</span>.2597956657409668 &lt;-- Orientation of turtle
+linear_velocity: <span class="m">1</span>.0      &lt;-- Speed
+angular_velocity: <span class="m">0</span>.0     &lt;-- Rotation Speed
+---
+&lt;THIS JUST KEEPS GOING!&gt;
+</pre>
+<p>Wow! That's a lot of data.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              14/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-15">
+          <div class="inner">
+            
+            <header><h1>Topic echo tips / tricks</h1></header>
+            
+            
+            <section><p>Topic echo is handy for a quick checkup to see if a piece of hardware is running and getting a sense of its position, but topics can generate a lot of data.
+There are some tricks to work with this data.</p>
+<ul class="simple">
+<li>You can use unix file pipes to dump the data to file.<ul>
+<li><tt class="docutils literal">ros2 topic echo /turtle2/pose/ &gt; MyFile.txt</tt></li>
+<li>This will output to the file MyFile.txt</li>
+<li><tt class="docutils literal">CTRL+C</tt> will still exit the program.</li>
+<li>You can use <tt class="docutils literal">less MyFile.txt</tt> to read the file</li>
+<li>You can use grep to find a specific line.</li>
+<li>Try this: <tt class="docutils literal">grep theta ./MyFile.txt</tt></li>
+</ul>
+</li>
+<li>Topic echo has some nice flags that are quite handy!<ul>
+<li>The <tt class="docutils literal"><span class="pre">--csv</span></tt> flag outputs data in CSV format.</li>
+<li>You will still need to use the file pipe mentioned above.</li>
+<li>Example: <tt class="docutils literal">ros2 topic echo <span class="pre">--csv</span> /turtle1/pose &gt; temp.csv</tt></li>
+</ul>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              15/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-16">
+          <div class="inner">
+            
+            <header><h1>Topic diagnostics!</h1></header>
+            
+            
+            <section><p>Our Turtle simulation is pretty simple and doesn't generate a lot of data.
+Camera and LIDAR sensors for autonomous vehicles can generate so much data that they saturate network connections.
+It is really helpful to have some diagnostic tools.
+Let's look at a few.</p>
+<ul class="simple">
+<li>The <tt class="docutils literal">topic bw</tt>, or bandwidth command, is used to measure the amount of bandwidth, or network capacity, that a topic uses. It requires a &quot;window size&quot; parameter, which is the number of messages to sample from.</li>
+<li>Like all CLI commands close it with <tt class="docutils literal">CTRL+C</tt></li>
+</ul>
+<pre><span></span>kscottz@ade:~$ ros2 topic bw -w <span class="m">100</span> /turtle1/pose
+Subscribed to <span class="o">[</span>/turtle1/pose<span class="o">]</span>
+average: <span class="m">1</span>.54KB/s
+     mean: <span class="m">0</span>.02KB min: <span class="m">0</span>.02KB max: <span class="m">0</span>.02KB window: <span class="m">61</span>
+average: <span class="m">1</span>.51KB/s
+     mean: <span class="m">0</span>.02KB min: <span class="m">0</span>.02KB max: <span class="m">0</span>.02KB window: <span class="m">100</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              16/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-17">
+          <div class="inner">
+            
+            <header><h1>Topic Diagnostics</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>The <tt class="docutils literal">topic hz</tt> command, or hertz command, is used to measure how frequently a given topic publishes. Frequencies are usually measured in a unit of Hertz, or cycles per second.</li>
+<li>The <tt class="docutils literal">hz</tt> command will publish the low, high, average, and standard deviation of the message publishing frequency.</li>
+</ul>
+<pre><span></span>kscottz@ade:~$ ros2 topic hz /turtle1/pose
+average rate: <span class="m">63</span>.917
+        min: <span class="m">0</span>.001s max: <span class="m">0</span>.017s std dev: <span class="m">0</span>.00218s window: <span class="m">65</span>
+average rate: <span class="m">63</span>.195
+        min: <span class="m">0</span>.001s max: <span class="m">0</span>.017s std dev: <span class="m">0</span>.00159s window: <span class="m">128</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              17/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-18">
+          <div class="inner">
+            
+            <header><h1>Topic info</h1></header>
+            
+            
+            <section><p>Another helpful command for inspecting a topic is the <tt class="docutils literal">info</tt> command.
+The <tt class="docutils literal">info</tt> command lists the number of publishers and subscribers</p>
+<p>Let's take a quick look:</p>
+<pre><span></span>kscottz@ade:~$ ros2 topic info /turtle1/pose
+Topic: /turtle1/pose
+Publisher count: <span class="m">1</span>
+Subscriber count: <span class="m">1</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              18/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-19">
+          <div class="inner">
+            
+            <header><h1>Topic Info Continued</h1></header>
+            
+            
+            <section><p>Another related tool for looking at topics is the <tt class="docutils literal">msg show</tt> command.
+ROS topics use standard messaging formats.
+If you would like to know the types and format of a message this command will do that.
+Below is an example for TurtleSim.
+Be aware that this tool uses tab completion.
+If you know don't know where or what you are looking for it can help!</p>
+<pre><span></span>kscottz@ade:~$ ros2 msg show turtlesim/msg/
+turtlesim/msg/Color  turtlesim/msg/Pose
+kscottz@ade:~$ ros2 msg show turtlesim/msg/Pose
+float32 x
+float32 y
+float32 theta
+
+float32 linear_velocity
+float32 angular_velocity
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              19/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-20">
+          <div class="inner">
+            
+            <header><h1>Publishing a message the hard way</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Sometimes when you are debugging and testing you need to send a message manually.</li>
+<li>The command is <tt class="docutils literal">ros2 topic pub</tt></li>
+<li>The format is as follows: <tt class="docutils literal">ros2 topic pub &lt;topic_name&gt; &lt;msg_type&gt; &lt;args&gt;</tt></li>
+<li>This command is difficult to get right as you have to write the message in YAML format.</li>
+<li>The <tt class="docutils literal">ros2 msg show</tt> command will help with this.</li>
+</ul>
+<p><cite>To run this command you'll need to stop the draw square node. Use F2/F3 to change to the correct screen and then enter CTRL+C</cite></p>
+<pre><span></span>kscottz@ade:~$ ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist <span class="s1">&#39;{linear: {x: 2.0,</span>
+<span class="s1">y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}&#39;</span>
+publisher: beginning loop
+publishing <span class="c1">#1: geometry_msgs.msg.Twist(linear=geometry_msgs.msg.Vector3(x=2.0, y=0.0, z=0.0),</span>
+<span class="nv">angular</span><span class="o">=</span>geometry_msgs.msg.Vector3<span class="o">(</span><span class="nv">x</span><span class="o">=</span><span class="m">0</span>.0, <span class="nv">y</span><span class="o">=</span><span class="m">0</span>.0, <span class="nv">z</span><span class="o">=</span><span class="m">1</span>.8<span class="o">))</span>
+</pre>
+<p>This command has a lot options that are super helpful for debugging.
+You can set QoS parameters for the messages, mock the sending node, and modify the publishing rate.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              20/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-21">
+          <div class="inner">
+            
+            <header><h1>But there is also a GUI tool!</h1></header>
+            
+            
+            <section><p>If the command line isn't your thing quite a few things can be accomplished via the <tt class="docutils literal">rqt_topic</tt>.
+The rqt GUI can be started by running <tt class="docutils literal">rqt</tt> in the command line.
+You'll want to restart the draw square node by running <tt class="docutils literal">ros2 run turtlesim draw_square</tt> in the command line.
+You should be able to press the arrow up key to get the command back.</p>
+<img alt="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/rqt_start.png" src="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/rqt_start.png" style="width: 200px;" />
+<p>RQT starts off blank, so we'll have to turn on the topic tab by clicking <tt class="docutils literal"><span class="pre">Plugins=&gt;Topics=&gt;Topic</span> Monitor</tt>.
+Once you do that you should see something like what's below. You may need to resize the window.</p>
+<img alt="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/rqt.png" src="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/rqt.png" style="width: 400px;" /></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              21/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-22">
+          <div class="inner">
+            
+            <header><h1>Node GUI Tools</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Understanding complex graphs as a list of node and topic names in our shell is really hard.</li>
+<li>Good news: we have a GUI tool!</li>
+<li>Type <tt class="docutils literal">rqt_graph</tt> in the terminal.</li>
+<li>The little double arrow in the top left will load nodes.</li>
+</ul>
+<img alt="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/rqt_graph.png" src="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/rqt_graph.png" style="width: 400px;" /></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              22/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-23">
+          <div class="inner">
+            
+            <header><h1>ROS parameters</h1></header>
+            
+            
+            <section><p><a class="reference external" href="https://index.ros.org/doc/ros2/Tutorials/Parameters/Understanding-ROS2-Parameters/">The full ROS Param tutorial can be found here.</a></p>
+<p>In ROS, parameters are values that are shared between nodes in the system (if you are familiar with the <a class="reference external" href="https://en.wikipedia.org/wiki/Blackboard_(design_pattern)">blackboard design pattern</a> in software engineering).
+Parameters are values that any node can query or write to, another good analogy would be global constants in normal software programs.
+Parameters are best used to configure your robot.
+For example, if you were building an autonomous vehicle and wanted to cap the maximum velocity of the vehicle at 100 km/h, you could create a parameter called &quot;MAX_SPEED&quot; that is visible to all the nodes.</p>
+<p>Let's take a look at the high level param program.</p>
+<pre><span></span>kscottz@ade:~$ ros2 param --help
+Various param related sub-commands
+
+Commands:
+  delete  Delete parameter
+  get     Get parameter
+  list    Output a list of available parameters
+  <span class="nb">set</span>     Set parameter
+  Call <span class="sb">`</span>ros2 param &lt;command&gt; -h<span class="sb">`</span> <span class="k">for</span> more detailed usage.
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              23/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-24">
+          <div class="inner">
+            
+            <header><h1>Params used by TurtleSim</h1></header>
+            
+            
+            <section><p>Let's see what the docs say and then see what happens when we call <tt class="docutils literal">ros2 param list</tt></p>
+<pre><span></span>kscottz@ade:~$ ros2 param --help
+usage: ros2 param <span class="o">[</span>-h<span class="o">]</span>
+optional arguments:
+  use_sim_time
+/turtlesim:
+  background_b
+  background_g
+  background_r
+usage: ros2 param list <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--spin-time SPIN_TIME<span class="o">]</span> <span class="o">[</span>--include-hidden-nodes<span class="o">]</span>
+
+positional arguments:
+  node_name             Name of the ROS node
+&lt; CLIPPED &gt;
+
+kscottz@ade:~$ ros2 param list
+/draw_square:
+  use_sim_time
+/turtlesim:
+  background_b
+  background_g
+  background_r
+  use_sim_time
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              24/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-25">
+          <div class="inner">
+            
+            <header><h1>Let's try getting/setting parameters</h1></header>
+            
+            
+            <section><p>The syntax for getting a parameter is as follows:</p>
+<p><tt class="docutils literal">ros2 param get &lt;node name&gt; &lt;param name&gt;</tt></p>
+<p>Let's give it a shot.</p>
+<pre><span></span>kscottz@ade:~$ ros2 param get /turtlesim background_b
+Integer value is: <span class="m">255</span>
+</pre>
+<p>Let's try setting a parameter. The syntax for that is as follows:</p>
+<p><tt class="docutils literal">ros2 set &lt;node name&gt; &lt;param name&gt; &lt;value&gt;</tt></p>
+<pre><span></span>kscottz@ade:~$ ros2 param <span class="nb">set</span> /turtlesim background_b <span class="m">0</span>
+Set parameter successful
+</pre>
+<p><cite>Note that THIS SEEMS TO BE BROKEN!?</cite></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              25/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-26">
+          <div class="inner">
+            
+            <header><h1>Services</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>The full ROS 2 Services tutorials <a class="reference external" href="https://index.ros.org/doc/ros2/Tutorials/Services/Understanding-ROS2-Services/">can be found here.</a></li>
+<li>ROS2 Services, as we have discussed previously, are another level of extraction built on top of ROS 2 topics.</li>
+<li>At its core, a service is just an API for controlling a robot task.</li>
+<li>A good analogy for ROS Services are  <a class="reference external" href="https://en.wikipedia.org/wiki/Remote_procedure_call">remote procedure calls</a> .</li>
+<li>Another good analogy for services would be making an REST API call.</li>
+<li>Curling a remote REST API endpoint to query data on a remote server is very similar to a ROS service.</li>
+<li>Essentially the ROS API allows every node to publish a list of services, and subscribe to  services from other nodes.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              26/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-27">
+          <div class="inner">
+            
+            <header><h1>Services Continued</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>The root command for ROS services is the <tt class="docutils literal">ros2 service</tt> command.</li>
+<li>Just like all the other commands we have looked at, let's run <tt class="docutils literal">ros2 service <span class="pre">--help</span></tt> to see what we can do.</li>
+<li>There is an important distinction between ros2 srv and ros2 service.</li>
+<li>The former is for installed services while the latter is for running services.</li>
+</ul>
+<p>We'll focus on the latter, but <tt class="docutils literal">srv</tt> is very similar.</p>
+<pre><span></span>kscottz@ade:~$ ros2 service --help
+usage: ros2 service <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--include-hidden-services<span class="o">]</span>
+                    Call <span class="sb">`</span>ros2 service &lt;command&gt; -h<span class="sb">`</span> <span class="k">for</span> more detailed usage.
+
+Commands:
+  call  Call a service
+  list  Output a list of available services
+</pre>
+<ul class="simple">
+<li>Services look fairly straight forward, with only two commands, <tt class="docutils literal">list</tt> and <tt class="docutils literal">call</tt>.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              27/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-28">
+          <div class="inner">
+            
+            <header><h1>Listing available services</h1></header>
+            
+            
+            <section><p>Let's take a look at what we can do with <tt class="docutils literal">ros2 service list</tt>.</p>
+<pre><span></span>kscottz@ade:~$ ros2 service list --help
+usage: ros2 service list <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--spin-time SPIN_TIME<span class="o">]</span> <span class="o">[</span>-t<span class="o">]</span> <span class="o">[</span>-c<span class="o">]</span>
+
+Output a list of available services
+
+optional arguments:
+
+   -t, --show-types      Additionally show the service <span class="nb">type</span>
+   -c, --count-services  Only display the number of services discovered
+</pre>
+<p>This command is fairly straight forward with only two utility flags. Let's use the <tt class="docutils literal"><span class="pre">-t</span></tt> flag</p>
+<pre><span></span>kscottz@ade:~$ ros2 service list -t
+/clear <span class="o">[</span>std_srvs/srv/Empty<span class="o">]</span>
+/draw_square/describe_parameters <span class="o">[</span>rcl_interfaces/srv/DescribeParameters<span class="o">]</span>
+/draw_square/get_parameter_types <span class="o">[</span>rcl_interfaces/srv/GetParameterTypes<span class="o">]</span>
+/draw_square/get_parameters <span class="o">[</span>rcl_interfaces/srv/GetParameters<span class="o">]</span>
+/draw_square/list_parameters <span class="o">[</span>rcl_interfaces/srv/ListParameters<span class="o">]</span>
+/draw_square/set_parameters <span class="o">[</span>rcl_interfaces/srv/SetParameters<span class="o">]</span>
+/draw_square/set_parameters_atomically <span class="o">[</span>rcl_interfaces/srv/SetParametersAtomically<span class="o">]</span>
+/kill <span class="o">[</span>turtlesim/srv/Kill<span class="o">]</span>
+/reset <span class="o">[</span>std_srvs/srv/Empty<span class="o">]</span>
+/spawn <span class="o">[</span>turtlesim/srv/Spawn<span class="o">]</span>
+... SNIP ...
+/turtlesim/list_parameters <span class="o">[</span>rcl_interfaces/srv/ListParameters<span class="o">]</span>
+/turtlesim/set_parameters <span class="o">[</span>rcl_interfaces/srv/SetParameters<span class="o">]</span>
+/turtlesim/set_parameters_atomically <span class="o">[</span>rcl_interfaces/srv/SetParametersAtomically<span class="o">]</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              28/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-29">
+          <div class="inner">
+            
+            <header><h1>Calling a ROS 2 service</h1></header>
+            
+            
+            <section><p>Let's explore the <tt class="docutils literal">ros2 service call</tt> command.</p>
+<pre><span></span>kscottz@ade:~$ ros2 service call -h
+usage: ros2 service call <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-r N<span class="o">]</span> service_name service_type <span class="o">[</span>values<span class="o">]</span>
+
+Call a service
+positional arguments:
+  service_name    Name of the ROS service to call to <span class="o">(</span>e.g. <span class="s1">&#39;/add_two_ints&#39;</span><span class="o">)</span>
+  service_type    Type of the ROS service <span class="o">(</span>e.g. <span class="s1">&#39;std_srvs/srv/Empty&#39;</span><span class="o">)</span>
+  values          Values to fill the service request with in YAML format <span class="o">(</span>e.g.
+                  <span class="s2">&quot;{a: 1, b: 2}&quot;</span><span class="o">)</span>, otherwise the service request will be
+                  published with default values
+
+optional arguments:
+  -r N, --rate N  Repeat the call at a specific rate in Hz
+</pre>
+<p>The format is pretty straight forward:</p>
+<p><tt class="docutils literal">ros2 service call &lt;service_name&gt; &lt;service_type&gt; [values]</tt></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              29/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-30">
+          <div class="inner">
+            
+            <header><h1>Basic example, blank services.</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>If we look at the list of services we see a <tt class="docutils literal">/reset/</tt> service that has the type <tt class="docutils literal">[std_srvs/srv/Empty]</tt>.</li>
+<li>What this means is that this service can be called with an empty message.</li>
+<li>It is worth noting that a empty message still has a type, it is just that the type is empty.</li>
+<li>Our turtle has been drawing a box for a while, why don't we see if we can reset the screen?<ul>
+<li>First kill the draw_square node. Use <tt class="docutils literal">F3</tt> to go to the right window.</li>
+<li>Now use <tt class="docutils literal">CTRL+C</tt> to stop the program.</li>
+</ul>
+</li>
+</ul>
+<p>Why don't we give it a call. The empty service message can be found in <tt class="docutils literal">std_srvs/srv/Empty</tt>, thus our call is as follows:</p>
+<pre><span></span>kscottz@ade:~$ ros2 service call /reset std_srvs/srv/Empty
+waiting <span class="k">for</span> service to become available...
+requester: making request: std_srvs.srv.Empty_Request<span class="o">()</span>
+
+response:
+std_srvs.srv.Empty_Response<span class="o">()</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              30/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-31">
+          <div class="inner">
+            
+            <header><h1>Service call result</h1></header>
+            
+            
+            <section><img alt="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/reset_service.png" src="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/reset_service.png" style="width: 800px;" />
+<p><cite>The service reset the screen, and changed our turtle icon!</cite></p>
+<p>Try toggling the <tt class="docutils literal">draw_square</tt> program and the <tt class="docutils literal">reset</tt> service a few times.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              31/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-32">
+          <div class="inner">
+            
+            <header><h1>More complex service calls</h1></header>
+            
+            
+            <section><p>Next we're going to try a more complex service call that requires an actual message.
+For this example we'll use the spawn service that creates a new turtle.</p>
+<p>The spawn service, looking at our <tt class="docutils literal">ros2 service list</tt> call uses a <tt class="docutils literal">[turtlesim/srv/Spawn]</tt> message.</p>
+<p>The best way to determine the name of a service is to use the <tt class="docutils literal">srv</tt> verb in ROS 2.</p>
+<p>The way we do this is running <tt class="docutils literal">ros2 srv show turtlesim/srv/Spawn</tt>.</p>
+<pre><span></span>kscottz@ade:~$ ros2 srv show turtlesim/srv/Spawn
+float32 x
+float32 y
+float32 theta
+string name <span class="c1"># Optional.  A unique name will be created and returned if this is empty</span>
+---
+string
+</pre>
+<p>We can see now that this message takes an x,y position, an angle theta, and an optional name.
+The service will return a string (as noted by the string below the <tt class="docutils literal"><span class="pre">---</span></tt>)</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              32/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-33">
+          <div class="inner">
+            
+            <header><h1>Services with complex messages</h1></header>
+            
+            
+            <section><p>The format of the message is YAML inside quotation marks.
+Following from the information above let's make a few turtles.</p>
+<pre><span></span>string namekscottz@ade:~$ ros2 service call /spawn turtlesim/srv/Spawn <span class="s2">&quot;{x: 2, y: 2, theta: 0.2, name: &#39;larry&#39;}&quot;</span>
+waiting <span class="k">for</span> service to become available...
+requester: making request: turtlesim.srv.Spawn_Request<span class="o">(</span><span class="nv">x</span><span class="o">=</span><span class="m">2</span>.0, <span class="nv">y</span><span class="o">=</span><span class="m">2</span>.0, <span class="nv">theta</span><span class="o">=</span><span class="m">0</span>.2, <span class="nv">name</span><span class="o">=</span><span class="s1">&#39;larry&#39;</span><span class="o">)</span>
+
+response:
+turtlesim.srv.Spawn_Response<span class="o">(</span><span class="nv">name</span><span class="o">=</span><span class="s1">&#39;larry&#39;</span><span class="o">)</span>
+
+kscottz@ade:~$ ros2 service call /spawn turtlesim/srv/Spawn <span class="s2">&quot;{x: 3, y: 3, theta: 0.3, name: &#39;moe&#39;}&quot;</span>
+waiting <span class="k">for</span> service to become available...
+requester: making request: turtlesim.srv.Spawn_Request<span class="o">(</span><span class="nv">x</span><span class="o">=</span><span class="m">3</span>.0, <span class="nv">y</span><span class="o">=</span><span class="m">3</span>.0, <span class="nv">theta</span><span class="o">=</span><span class="m">0</span>.3, <span class="nv">name</span><span class="o">=</span><span class="s1">&#39;moe&#39;</span><span class="o">)</span>
+
+response:
+turtlesim.srv.Spawn_Response<span class="o">(</span><span class="nv">name</span><span class="o">=</span><span class="s1">&#39;moe&#39;</span><span class="o">)</span>
+
+kscottz@ade:~$ ros2 service call /spawn turtlesim/srv/Spawn <span class="s2">&quot;{x: 4, y: 3, theta: 0.4, name: &#39;curly&#39;}&quot;</span>
+waiting <span class="k">for</span> service to become available...
+requester: making request: turtlesim.srv.Spawn_Request<span class="o">(</span><span class="nv">x</span><span class="o">=</span><span class="m">4</span>.0, <span class="nv">y</span><span class="o">=</span><span class="m">3</span>.0, <span class="nv">theta</span><span class="o">=</span><span class="m">0</span>.4, <span class="nv">name</span><span class="o">=</span><span class="s1">&#39;curly&#39;</span><span class="o">)</span>
+
+response:
+turtlesim.srv.Spawn_Response<span class="o">(</span><span class="nv">name</span><span class="o">=</span><span class="s1">&#39;curly&#39;</span><span class="o">)</span>
+
+kscottz@ade:~$
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              33/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-34">
+          <div class="inner">
+            
+            <header><h1>Service call results!</h1></header>
+            
+            
+            <section><p><cite>If everything went well we should see something like this.</cite></p>
+<img alt="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/four_turtles.png" src="file:///home/kscottz/Code/ros2_documentation/source/Related-Projects/AutowareLectureSeries/./images/four_turtles.png" style="width: 400px;" />
+<p><em>We've now created four turtles!</em></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              34/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-35">
+          <div class="inner">
+            
+            <header><h1>ROS action CLI</h1></header>
+            
+            
+            <section><p>ROS Actions and Services are very similar in terms of what they do and likewise their APIs are also fairly similar.</p>
+<p>ROS actions are the prefered tool for <em>asynchronus</em> tasks while services are the preffered means of deploying <em>synchronus</em> tasks.</p>
+<p>In more practical terms services should be used for quick, short tasks, while actions should be used for long term behaviors (like moving to a waypoint).</p>
+<p>The other big difference between actions and services, is that actions can send periodic updates about their progress.</p>
+<pre><span></span>kscottz@ade:~$ ros2 action -h
+
+Various action related sub-commands
+
+Commands:
+  info       Print information about an action
+  list       Output a list of action names
+  send_goal  Send an action goal
+  show       Output the action definition
+</pre>
+<p><cite>Looks familiar! Let's dif into list, and info.</cite></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              35/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-36">
+          <div class="inner">
+            
+            <header><h1>Actions: list &amp; info</h1></header>
+            
+            
+            <section><p>Let's see what actions are availabe to us using <tt class="docutils literal">ros2 action list</tt></p>
+<pre><span></span>kscottz@ade:~$ ros2 action list
+/curly/rotate_absolute
+/larry/rotate_absolute
+/moe/rotate_absolute
+/turtle1/rotate_absolute
+</pre>
+<p>We see each of our turtles have one service called <tt class="docutils literal">rotate_absolute</tt>.
+Let's dig into this action using the info verb.
+This command has a <tt class="docutils literal"><span class="pre">-t</span></tt> flag to list the types of messages.</p>
+<pre><span></span>kscottz@ade:~$ ros2 action info /moe/rotate_absolute -t
+Action: /moe/rotate_absolute
+Action clients: <span class="m">0</span>
+Action servers: <span class="m">1</span>
+  /turtlesim <span class="o">[</span>turtlesim/action/RotateAbsolute<span class="o">]</span>
+</pre>
+<p>Interesting, what do these terms mean.
+The first line lists the action name.
+The second line gives the current number of clients for the action.
+The <tt class="docutils literal">Action servers</tt> line gives the total number of action servers for this action.
+The last line gives the package and message type for the action.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              36/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-37">
+          <div class="inner">
+            
+            <header><h1>Calling an action and giving it a goal</h1></header>
+            
+            
+            <section><p>Let's take a look at the <tt class="docutils literal">ros2 action send_goal</tt> help command.</p>
+<pre><span></span>kscottz@ade:~$ ros2 action send_goal -h
+usage: ros2 action send_goal <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-f<span class="o">]</span> action_name action_type goal
+
+Send an action goal
+positional arguments:
+  action_name     Name of the ROS action <span class="o">(</span>e.g. <span class="s1">&#39;/fibonacci&#39;</span><span class="o">)</span>
+  action_type     Type of the ROS action <span class="o">(</span>e.g. <span class="s1">&#39;example_interfaces/action/Fibonacci&#39;</span><span class="o">)</span>
+  goal            Goal request values in YAML format <span class="o">(</span>e.g. <span class="s1">&#39;{order: 10}&#39;</span><span class="o">)</span>
+
+optional arguments:
+  -f, --feedback  Echo feedback messages <span class="k">for</span> the goal
+</pre>
+<p>We can see here that we need to know the action name, the type, and the values.
+Now the only problem is figuring out the format of the action_type.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              37/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-38">
+          <div class="inner">
+            
+            <header><h1>Let's understand the RotateAbsolute action message</h1></header>
+            
+            
+            <section><p>The <tt class="docutils literal">ros2 action show</tt> command can be used to find the type of action message.
+Let's take a look.</p>
+<pre><span></span>kscottz@ade:~$ ros2 action show turtlesim/action/RotateAbsolute
+<span class="c1"># The desired heading in radians</span>
+float32 theta  <span class="c1">#&lt; --- This section is the GOAL</span>
+---
+<span class="c1"># The angular displacement in radians to the starting position</span>
+float32 delta  <span class="c1">#&lt; --- This section is the final result, different from the goal.</span>
+---
+<span class="c1"># The remaining rotation in radians</span>
+float32 remaining <span class="c1"># &lt; --- This is the current state.</span>
+</pre>
+<p>What does this say about rotate absolute?</p>
+<ul class="simple">
+<li>There is a float input, <tt class="docutils literal">theta</tt> the desired heading. This first section is the actual goal.</li>
+<li><tt class="docutils literal">delta</tt> --  the angle from the initial heading. This is the value returned when the action completes.</li>
+<li><tt class="docutils literal">remaining</tt> -- the remaining radians to move. This is the value posted by the action while the action is being done.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              38/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-39">
+          <div class="inner">
+            
+            <header><h1>Executing the action</h1></header>
+            
+            
+            <section><p>With this information we can create our call to the action server.
+We'll use the <tt class="docutils literal"><span class="pre">-f</span></tt> flag to make this a bit clearer.</p>
+<p><cite>Keep an eye on your turtle! It should move, slowly.</cite></p>
+<pre><span></span>kscottz@ade:~$ ros2 action send_goal -f /turtle1/rotate_absolute turtlesim/action/RotateAbsolute <span class="o">{</span><span class="s1">&#39;theta: 1.70&#39;</span><span class="o">}</span>
+Waiting <span class="k">for</span> an action server to become available...
+Sending goal:
+  theta: <span class="m">1</span>.7
+
+Feedback:
+  remaining: <span class="m">0</span>.11599969863891602
+
+Goal accepted with ID: 35c40e91590047099ae5bcc3c5151121
+
+Feedback:
+ remaining: <span class="m">0</span>.09999966621398926
+
+Feedback:
+ remaining: <span class="m">0</span>.06799960136413574
+
+Feedback:
+ remaining: <span class="m">0</span>.03599953651428223
+
+Result:
+ delta: -0.09600019454956055
+
+Goal finished with status: SUCCEEDED
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              39/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-40">
+          <div class="inner">
+            
+            <header><h1>ROS Bag!</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>ROS Bags are ROS's tool for recording, and replaying data.</li>
+<li>ROSBags are kinda like log files that let you store data along with messages.</li>
+<li>ROS systems can generate a lot of data, so you select which topics you want to bag.</li>
+<li>Bags are a great tool for testing and debugging your application as well.</li>
+</ul>
+<p>Let's take a look at the base <tt class="docutils literal">bag</tt> verb.</p>
+<pre><span></span>kscottz@ade:~$ ros2 bag -h
+usage: ros2 bag <span class="o">[</span>-h<span class="o">]</span> Call <span class="sb">`</span>ros2 bag &lt;command&gt; -h<span class="sb">`</span> <span class="k">for</span> more detailed usage. ...
+
+Various rosbag related sub-commands
+
+Commands:
+  info    ros2 bag info
+  play    ros2 bag play
+  record  ros2 bag record
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              40/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-41">
+          <div class="inner">
+            
+            <header><h1>Let's try recording our first Bag</h1></header>
+            
+            
+            <section><p>First use <tt class="docutils literal">F2</tt> or <tt class="docutils literal">F3</tt> to go to the other terminal.
+Start the <tt class="docutils literal">draw_square</tt> demo again to get the default turtle moving.</p>
+<p>The command for that is: <tt class="docutils literal">ros2 run turtlesim draw_square</tt></p>
+<p>Now let's look at <tt class="docutils literal">ros2 bag <span class="pre">-h</span></tt></p>
+<pre><span></span>kscottz@ade:~$ ros2 bag record -h
+usage: ros2 bag record <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-a<span class="o">]</span> <span class="o">[</span>-o OUTPUT<span class="o">]</span> <span class="o">[</span>-s STORAGE<span class="o">]</span>
+                       <span class="o">[</span>-f SERIALIZATION_FORMAT<span class="o">]</span> <span class="o">[</span>--no-discovery<span class="o">]</span>
+                       <span class="o">[</span>-p POLLING_INTERVAL<span class="o">]</span>
+                       <span class="o">[</span>topics <span class="o">[</span>topics ...<span class="o">]]</span>
+ros2 bag record
+positional arguments:
+  topics                topics to be recorded
+optional arguments:
+  -a, --all             recording all topics, required <span class="k">if</span> no topics are listed explicitly.
+  -o OUTPUT, --output OUTPUT
+                        destination of the bagfile to create, defaults to a
+                        timestamped folder in the current directory
+  -s STORAGE, --storage STORAGE
+                        storage identifier to be used, defaults to <span class="s2">&quot;sqlite3&quot;</span>
+  -f SERIALIZATION_FORMAT, --serialization-format SERIALIZATION_FORMAT
+                        rmw serialization format in which the messages are
+                        saved, defaults to the rmw currently in use
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              41/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-42">
+          <div class="inner">
+            
+            <header><h1>Let's Bag!</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>Let's bag the pose data on the <tt class="docutils literal">/turtle1/pose topic</tt></li>
+<li>Save the data to the directory <tt class="docutils literal">turtle1.bag</tt> using the <tt class="docutils literal"><span class="pre">-o</span></tt> flag.</li>
+<li>The program will bag until you hit <tt class="docutils literal">CTRL+C</tt>. Give it a good 30 seconds.</li>
+</ul>
+<p>Here's my example.</p>
+<pre><span></span>kscottz@ade:~$ ros2 bag record /turtle1/pose -o turtle1
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>rosbag2_storage<span class="o">]</span>: Opened database <span class="s1">&#39;turtle1&#39;</span>.
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>rosbag2_transport<span class="o">]</span>: Listening <span class="k">for</span> topics...
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>rosbag2_transport<span class="o">]</span>: Subscribed to topic <span class="s1">&#39;/turtle1/pose&#39;</span>
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>rosbag2_transport<span class="o">]</span>: All requested topics are subscribed. Stopping discovery...
+^C<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>rclcpp<span class="o">]</span>: signal_handler<span class="o">(</span><span class="nv">signal_value</span><span class="o">=</span><span class="m">2</span><span class="o">)</span>
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              42/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-43">
+          <div class="inner">
+            
+            <header><h1>Let's inspect our Bag.</h1></header>
+            
+            
+            <section><p>You can introspect any bag file using the <tt class="docutils literal">ros2 bag info</tt> command.
+This command will list the messages in the bag, the duration of file, and the number of messages.</p>
+<pre><span></span>kscottz@ade:~$ ros2 bag info turtle1
+Files:             turtle1.db3
+Bag size:          <span class="m">268</span>.4 KiB
+Storage id:        sqlite3
+Duration:          <span class="m">68</span>.705s
+Start:             May  <span class="m">4</span> <span class="m">2020</span> <span class="m">16</span>:10:26.556 <span class="o">(</span><span class="m">1588633826</span>.556<span class="o">)</span>
+End                May  <span class="m">4</span> <span class="m">2020</span> <span class="m">16</span>:11:35.262 <span class="o">(</span><span class="m">1588633895</span>.262<span class="o">)</span>
+Messages:          <span class="m">4249</span>
+Topic information: Topic: /turtle1/pose <span class="p">|</span> Type: turtlesim/msg/Pose <span class="p">|</span> Count: <span class="m">4249</span> <span class="p">|</span> Serialization Format: cdr
+</pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              43/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-44">
+          <div class="inner">
+            
+            <header><h1>Replaying a Bag</h1></header>
+            
+            
+            <section><p>Bags are a great tool for debugging and testing.
+You can treat a ROS bag like a recording of a running ROS system.
+When you play a bag file you can use most of the ros2 cli tools to inspect the recorded topics.</p>
+<p>To replay the bag, first use <tt class="docutils literal">F2/F3</tt> and <tt class="docutils literal">CTRL+C</tt> to turn off the main turtle node and the <tt class="docutils literal">draw_square</tt> node.</p>
+<p>Now in a new terminal replay the bag file using the following command:</p>
+<pre><span></span>kscottz@ade:~$ ros2 bag play turtle1
+<span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>rosbag2_storage<span class="o">]</span>: Opened database <span class="s1">&#39;turtle1&#39;</span>.
+</pre>
+<p>Nothing should happen visibly, but a lot is happening under the hood.
+Use <tt class="docutils literal">F2</tt> or <tt class="docutils literal">F3</tt> to go to a second terminal.
+Just like a running robot, you should be able <tt class="docutils literal">list</tt> and <tt class="docutils literal">echo</tt> topics.</p>
+<pre><span></span>kscottz@ade:~ros2 topic list
+/parameter_events
+/rosout
+/turtle1/pose
+
+kscottz@ade:~$ ros2 bag info turtle1
+x: <span class="m">3</span>.8595714569091797
+y: <span class="m">3</span>.6481313705444336
+theta: -1.2895503044128418
+linear_velocity: <span class="m">1</span>.0
+angular_velocity: <span class="m">0</span>.0
+---
+</pre>
+<p>Pretty cool right?</p>
+<p>You can kill the bag file with <tt class="docutils literal">CTRL+C</tt>.</p>
+<p>---</p>
+
+
+<h1>That's All Folks!</h1>
+<ul>
+<li><p class="first">This is by no means complete but it covers the basics.</p>
+</li>
+<li><p class="first">You should use your skills to explore more.</p>
+</li>
+<li><p class="first">Remember your resources!</p>
+<blockquote>
+<ul class="simple">
+<li><a class="reference external" href="https://answers.ros.org/questions/">http://answers.ros.org</a></li>
+<li><a class="reference external" href="https://discourse.ros.org/">https://discourse.ros.org/</a></li>
+<li><a class="reference external" href="http://wiki.ros.org/">http://wiki.ros.org/</a></li>
+<li><a class="reference external" href="https://index.ros.org/doc/ros2/">https://index.ros.org/doc/ros2/</a></li>
+</ul>
+</blockquote>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              44/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: Lesson3CLI.rst -->
+      <div class="slide-wrapper">
+        <div class="slide slide-45">
+          <div class="inner">
+            
+            <header><h1>Homework?!</h1></header>
+            
+            
+            <section><ul class="simple">
+<li>The TurtleBot comes from a long line of turtle tutorials.</li>
+<li>The original one was the <a class="reference external" href="https://en.wikipedia.org/wiki/Logo_(programming_language)">Logo programming language</a> for computer graphics.</li>
+<li>I would recommend using the turtle to make some cool graphics.</li>
+<li><a class="reference external" href="https://www.youtube.com/watch?v=m4a0jcrDgK0">Here's an example of what people did with LOGO.</a>.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="Lesson3CLI.rst">Lesson3CLI.rst</a>
+            </aside>
+            
+            <aside class="page_number">
+              45/45
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div id="toc" class="sidebar hidden">
+    <h2>Table of Contents</h2>
+    <table>
+      <caption>Table of Contents</caption>
+      
+      <tr id="toc-row-1">
+        <th><a href="#slide1">The command line</a></th>
+        <td><a href="#slide1">1</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-2">
+        <th><a href="#slide2">Let's Fire up ADE</a></th>
+        <td><a href="#slide2">2</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-3">
+        <th><a href="#slide3"><em>Example of --help</em></a></th>
+        <td><a href="#slide3">3</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-4">
+        <th><a href="#slide4">ROS 2 run</a></th>
+        <td><a href="#slide4">4</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-5">
+        <th><a href="#slide5">TA-DA! A wild ROS turtle appears</a></th>
+        <td><a href="#slide5">5</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-6">
+        <th><a href="#slide6">Moving your turtle</a></th>
+        <td><a href="#slide6">6</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-7">
+        <th><a href="#slide7">Let's explore what's happening</a></th>
+        <td><a href="#slide7">7</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-8">
+        <th><a href="#slide8">Inspecting nodes</a></th>
+        <td><a href="#slide8">8</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-9">
+        <th><a href="#slide9">Let's try node list</a></th>
+        <td><a href="#slide9">9</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-10">
+        <th><a href="#slide10">Let's try node info</a></th>
+        <td><a href="#slide10">10</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-11">
+        <th><a href="#slide11">ROS topic CLI interface</a></th>
+        <td><a href="#slide11">11</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-12">
+        <th><a href="#slide12">ros2 topic <em>&lt;xxxx&gt;</em></a></th>
+        <td><a href="#slide12">12</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-13">
+        <th><a href="#slide13">Let's look at the topics in TurtleSim</a></th>
+        <td><a href="#slide13">13</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-14">
+        <th><a href="#slide14">Digging into topics</a></th>
+        <td><a href="#slide14">14</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-15">
+        <th><a href="#slide15">Topic echo tips / tricks</a></th>
+        <td><a href="#slide15">15</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-16">
+        <th><a href="#slide16">Topic diagnostics!</a></th>
+        <td><a href="#slide16">16</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-17">
+        <th><a href="#slide17">Topic Diagnostics</a></th>
+        <td><a href="#slide17">17</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-18">
+        <th><a href="#slide18">Topic info</a></th>
+        <td><a href="#slide18">18</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-19">
+        <th><a href="#slide19">Topic Info Continued</a></th>
+        <td><a href="#slide19">19</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-20">
+        <th><a href="#slide20">Publishing a message the hard way</a></th>
+        <td><a href="#slide20">20</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-21">
+        <th><a href="#slide21">But there is also a GUI tool!</a></th>
+        <td><a href="#slide21">21</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-22">
+        <th><a href="#slide22">Node GUI Tools</a></th>
+        <td><a href="#slide22">22</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-23">
+        <th><a href="#slide23">ROS parameters</a></th>
+        <td><a href="#slide23">23</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-24">
+        <th><a href="#slide24">Params used by TurtleSim</a></th>
+        <td><a href="#slide24">24</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-25">
+        <th><a href="#slide25">Let's try getting/setting parameters</a></th>
+        <td><a href="#slide25">25</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-26">
+        <th><a href="#slide26">Services</a></th>
+        <td><a href="#slide26">26</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-27">
+        <th><a href="#slide27">Services Continued</a></th>
+        <td><a href="#slide27">27</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-28">
+        <th><a href="#slide28">Listing available services</a></th>
+        <td><a href="#slide28">28</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-29">
+        <th><a href="#slide29">Calling a ROS 2 service</a></th>
+        <td><a href="#slide29">29</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-30">
+        <th><a href="#slide30">Basic example, blank services.</a></th>
+        <td><a href="#slide30">30</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-31">
+        <th><a href="#slide31">Service call result</a></th>
+        <td><a href="#slide31">31</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-32">
+        <th><a href="#slide32">More complex service calls</a></th>
+        <td><a href="#slide32">32</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-33">
+        <th><a href="#slide33">Services with complex messages</a></th>
+        <td><a href="#slide33">33</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-34">
+        <th><a href="#slide34">Service call results!</a></th>
+        <td><a href="#slide34">34</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-35">
+        <th><a href="#slide35">ROS action CLI</a></th>
+        <td><a href="#slide35">35</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-36">
+        <th><a href="#slide36">Actions: list &amp; info</a></th>
+        <td><a href="#slide36">36</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-37">
+        <th><a href="#slide37">Calling an action and giving it a goal</a></th>
+        <td><a href="#slide37">37</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-38">
+        <th><a href="#slide38">Let's understand the RotateAbsolute action message</a></th>
+        <td><a href="#slide38">38</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-39">
+        <th><a href="#slide39">Executing the action</a></th>
+        <td><a href="#slide39">39</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-40">
+        <th><a href="#slide40">ROS Bag!</a></th>
+        <td><a href="#slide40">40</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-41">
+        <th><a href="#slide41">Let's try recording our first Bag</a></th>
+        <td><a href="#slide41">41</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-42">
+        <th><a href="#slide42">Let's Bag!</a></th>
+        <td><a href="#slide42">42</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-43">
+        <th><a href="#slide43">Let's inspect our Bag.</a></th>
+        <td><a href="#slide43">43</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-44">
+        <th><a href="#slide44">Replaying a Bag</a></th>
+        <td><a href="#slide44">44</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-45">
+        <th><a href="#slide45">Homework?!</a></th>
+        <td><a href="#slide45">45</a></td>
+      </tr>
+      
+      
+    </table>
+  </div>
+  
+  <div id="help" class="sidebar hidden">
+    <h2>Help</h2>
+    <table>
+      <caption>Help</caption>
+      <tr>
+        <th>Table of Contents</th>
+        <td>t</td>
+      </tr>
+      <tr>
+        <th>Exposé</th>
+        <td>ESC</td>
+      </tr>
+      <tr>
+        <th>Full screen slides</th>
+        <td>e</td>
+      </tr>
+      <tr>
+        <th>Presenter View</th>
+        <td>p</td>
+      </tr>
+      <tr>
+        <th>Source Files</th>
+        <td>s</td>
+      </tr>
+      <tr>
+        <th>Slide Numbers</th>
+        <td>n</td>
+      </tr>
+      <tr>
+        <th>Toggle screen blanking</th>
+        <td>b</td>
+      </tr>
+      <tr>
+        <th>Show/hide slide context</th>
+        <td>c</td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>2</td>
+      </tr>
+      <tr>
+        <th>Help</th>
+        <td>h</td>
+      </tr>
+    </table>
+  </div>
+  <script>main()</script>
+</body>
+</html>

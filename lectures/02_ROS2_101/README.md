@@ -1,0 +1,1 @@
+### [Lecture 2](https://www.youtube.com/watch?v=FTA4Ia2vLS8)

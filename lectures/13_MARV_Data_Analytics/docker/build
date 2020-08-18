@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -eux
+
+cd "$(dirname "$(realpath "$0")")"
+
+if [ ! -e tensorflow-2.3.0-cp38-cp38-manylinux2010_x86_64.whl ]; then
+    curl -LO https://files.pythonhosted.org/packages/45/6e/d916ae0b2b8319caf55860de6a173aaabfe2350334c25a064ce0cc8c6852/tensorflow-2.3.0-cp38-cp38-manylinux2010_x86_64.whl
+fi
+
+if [ ! -e centernet_hg104_512x512_coco17_tpu-8.tar.gz ]; then
+    curl -LO http://download.tensorflow.org/models/object_detection/tf2/20200711/centernet_hg104_512x512_coco17_tpu-8.tar.gz
+fi
+
+echo custom-marv-robotics > ../marv-robotics/.image-name
+docker build -t custom-marv-robotics .

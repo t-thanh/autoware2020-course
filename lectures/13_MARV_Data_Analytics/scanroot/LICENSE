@@ -1,0 +1,10 @@
+This directory contains datasets with following copyright and licenses:
+
+rosbag2_2020_07_23-09_26_49/
+Copyright 2020 Josh Whitley <josh.whitley@autoware.org>
+CC-BY 4.0 https://creativecommons.org/licenses/by/4.0/
+
+kitti/
+http://www.cvlibs.net/datasets/kitti/raw_data.php
+Copyright 2013 Andreas Geiger, Philip Lenz, Christoph Stiller, Raquel Urtasun
+CC-BY-NC-SA https://creativecommons.org/licenses/by-nc-sa/3.0/

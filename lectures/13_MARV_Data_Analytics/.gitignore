@@ -1,0 +1,14 @@
+*.egg-info/
+*-shm
+*-wal
+
+__pycache__/
+
+/.cache/
+/.venv/
+/docker/*.tar.gz
+/docker/*.whl
+/marv-robotics
+/site*/db
+/site*/sessionkey
+/site*/store

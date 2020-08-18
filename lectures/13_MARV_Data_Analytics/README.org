@@ -1,0 +1,359 @@
+#+TITLE: MARV Tutorials - Data management and analytics
+
+* Intro
+MARV -- MARV Analytics, Retrieval, and Visualisation platform
+
+- bag files ROS1 and ROS2
+- extend to any other format
+
+Three flavours:
+
+- Enterprise Edition [[https://ternaris.com/marv-robotics]]
+- MARV.Automotive in cooperation with Apex.AI [[https://apex.ai/marv-automotive]]
+- *Community Edition* (free and open source) [[https://gitlab.com/ternaris/marv-robotics]]
+
+Documentation: [[https://ternaris.com/marv-robotics/docs]]
+
+** Prerequisites
+
+- Docker
+- Git and git-lfs
+- rsync
+- Repository with tutorial code and this README.org
+- Repository with marv-robotics community edition
+
+#+begin_src
+git lfs pull -I scanroot
+./docker/build
+#+end_src
+
+Good to go chillin' in the sun on low bandwith network!
+
+* Session 1: Setup, find and process ROS1 and ROS2 bags
+** Install MARV Community Edition
+
+- Docker installation
+- Tooling from marv-robotics project
+
+Configure default docker image:
+
+#+begin_src
+echo ternaris/marv-robotics > marv-robotics/.image-name
+#+end_src
+
+** Setup basic site
+
+Use default example config and start container:
+
+#+begin_src
+mkdir site1
+cp marv-robotics/sites/example/marv.conf site1
+./marv-robotics/scripts/run-container site1 scanroot
+#+end_src
+
+[[http://localhost:8000]]
+
+** Site folder structure
+
+#+begin_src
+db/         <- database, valuable data
+marv.conf   <- config file
+sessionkey  <- delete and users need to relogin
+store/      <- extracted from bags, less valuable
+#+end_src
+
+** Add user, scan for bag files and run MARV nodes
+
+Run container in background and enter container:
+
+#+begin_src
+./marv-robotics/scripts/run-container site1 scanroot --detach
+./marv-robotics/scripts/enter-container
+marv user add demo
+marv group adduser demo admin
+marv scan
+marv run --col bags
+#+end_src
+
+** Tour through web UI
+
+[[http://localhost:8000]]
+
+- Listing
+- Summary
+- Filters
+- Detail view sections
+- Tag and comment
+
+* Session 2: Add metadata files with custom scanner
+** Motivation
+
+Scanner finds files in the scanroot and creates datasets.
+
+Default scanner:
+
+- Find bag files anywhere in scanroot
+- Group split bags into datasets
+
+Additional files for each dataset:
+
+- dataset.yaml file
+  - Kitti category
+  - Vehicle name
+  - Driver name
+  - Link to GitLab issue / purpose of drive
+- Kitti object label file: tracklet_labels.xml
+
+** Write directory-based scanner
+*** Code
+
+[[./site2/code/marv_tutorials/marv_tutorials/scanner.py]]
+
+- Ignore directories without dataset.yaml
+- Don't walk into subdirectories
+- Return one dataset containing all files in directory
+
+*** Config
+
+[[./site2/marv.conf]]
+
+- Declare scanner to be used for bags collection
+
+** Scan for newly defined datasets and run nodes
+
+#+begin_src
+rsync -vaP site2/ site/
+
+./marv-robotics/scripts/run-container site scanroot --detach
+./marv-robotics/scripts/enter-container
+marv user add demo
+marv scan
+marv run --col bags
+#+end_src
+
+[[http://localhost:8000]]
+
+- Detail summary view shows multiple files
+
+* Session 3: Use metadata for filter and listing
+** Number of cars
+*** objects node
+
+[[./site3/code/marv_tutorials/marv_tutorials/metadata.py]]
+
+- Filter and listing database is populated from store
+- Declare MARV node with Objects output type, saved in store
+- Use basic dataset as input
+- MARV thinks in streams; dataset is a stream with one message
+- Pull dataset message
+- Nodes are generators; communicate with MARV by yielding requests
+- Identify and open tracklet file
+- Count cars
+- Publish dict with number of cars
+
+*** capnp schema
+
+[[./site3/code/marv_tutorials/marv_tutorials/types.capnp]]
+
+[[https://capnproto.org/language.html]]
+
+#+begin_src
+capnp id
+#+end_src
+
+*** config
+
+[[./site3/marv.conf]]
+
+- Filter config
+- Listing config
+- Listing summary config
+
+*** Restart and re-initialise MARV; run new node
+
+#+begin_src
+rsync -vaP site3/ site/
+
+MARV_INIT=1 ./marv-robotics/scripts/run-container site scanroot --detach
+./marv-robotics/scripts/enter-container
+marv run --col bags --node objects
+PDB=1 marv run --col bags --node objects
+#+end_src
+
+[[http://localhost:8000]]
+
+- Listing column
+- Summary field
+- Filter for number of cars
+
+** Driver, vehicle, purpose of test drive
+*** metadata node
+
+[[./site3/code/marv_tutorials/marv_tutorials/metadata.py]]
+
+- Metadata output type, saved in store
+- dataset.yaml file
+- Place a bug into code
+
+*** config
+
+[[./site3/marv.conf]]
+
+- Filter config
+- Listing config
+
+*** run new node
+
+#+begin_src
+marv run --col bags --node metadata
+PDB=1 marv run --col bags --node metadata
+#+end_src
+
+[[http://localhost:8000]]
+
+- Listing column
+- Filter for vehicle name
+
+* Session 4: Write custom nodes to process data streams
+
+- Reimplement extraction of video stream of one topic
+- Compose multiple nodes in a map/reduce approach
+
+** Extract and deserialize image messages
+
+[[./site4/code/marv_tutorials/marv_tutorials/imgsrc.py]]
+
+*rosmsg_imgstream* node:
+
+- Volatile node, not saved in store
+- Select single topic as input stream -- use nonexisting for now
+- Map raw ROS messages to deserialized ROS messages
+- Resulting stream is reusable by multiple nodes
+- Get deserialize function
+  - Will abort if topic does not exist
+  - Works transparent for ROS1 and ROS2 streams
+- Pull input stream; push to output stream
+- Break once input stream is exhausted
+
+** Map ROS sensor_msgs/Image stream to cv2 image stream
+
+[[./site4/code/marv_tutorials/marv_tutorials/imgsrc.py]]
+
+*imgsrc* node:
+
+- Volatile node, not saved in store
+- rosmsg_imgstream as default input stream
+- Map ROS sensor_msgs/Image stream to cv2 image stream
+- Processing happens usually on cv2 images
+- marv_ros.img_tools has efficient conversion function
+- Resulting stream is reusable by multiple nodes
+
+** Reduce cv2 image stream to WebM container with VP9 video stream
+
+[[./site4/code/marv_tutorials/marv_tutorials/video.py]]
+
+*video_sink* node:
+
+- File, saved in store
+- Use marv.make_file to create output file in node
+- Call `ffmpeg` in subprocess and push images to stdin
+- Publish single message with video file
+
+** Display video section
+
+[[./site4/code/marv_tutorials/marv_tutorials/video.py]]
+
+*video_section* node:
+
+- Detail Section, saved in store
+- *video_sink* as input stream (of one messag)
+- title parameter
+- Publish dictionary creating a section with one video widget
+
+** Config and run nodes
+
+[[./site4/marv.conf]]
+
+- Nodes saved in store
+- Video_section displayed in detail view
+
+#+begin_src
+rsync -vaP site4/ site/
+
+MARV_INIT=1 ./marv-robotics/scripts/run-container site scanroot --detach
+./marv-robotics/scripts/enter-container
+marv run --col bags --node video_section
+#+end_src
+
+[[http://localhost:8000]]
+
+- No video section yet
+- Fix and rerun
+
+#+begin_src
+marv run --col bags --node video_sink --force --force-dependent
+PDB=1 marv run --col bags --node video_sink --force --force-dependent
+#+end_src
+
+- Video player in detail section
+
+* Session 5: Use TensorFlow to detect objects in video
+
+** Custom docker image with TensorFlow and pre-trained model
+
+[[./docker/build]]
+
+#+begin_src
+./docker/build
+#+end_src
+
+** Image filter node adding bounding boxes
+
+[[./site5/code/marv_tutorials/marv_tutorials/bbox.py]]
+
+- cv2 images as input stream
+- Utility function to detect and visualize bounding boxes
+- Use pre-trained model
+
+[[./site5/code/marv_tutorials/marv_tutorials/video.py]]
+
+- Change *video_sink* input
+
+** Rerun video_sink and dependent nodes (video_section)
+
+#+begin_src
+rsync -vaP site5/ site/
+
+MARV_INIT=1 ./marv-robotics/scripts/run-container site scanroot --detach
+./marv-robotics/scripts/enter-container
+marv run --col bags --node video_sink --force --force-dependent
+#+end_src
+
+- Re-run *video_sink* and dependent nodes (*video_section*)
+
+[[http://localhost:8000]]
+
+- Video section now has bounding boxes
+
+* Wrap-up
+
+- Installation of MARV Community Edition
+- Use example config to visualize some ROS1 and ROS2 bags
+- Add additional files with custom scanner
+- Filter for metadata and display in listing and summary
+- Map/reduce image stream from a bag file into a video
+- Use tensorflow to detect and mark objects in video
+
+[[https://ternaris.com/marv-robotics/docs/]]
+
+[[https://ternaris.com/marv-robotics/docs/deploy.html]]
+
+
+Star and fork us on GitLab:
+
+[[https://gitlab.com/ternaris/marv-robotics]]
+
+Give us feedback:
+
+https://gitlab.com/ternaris/marv-robotics/-/issues
+[[mailto:team@ternaris.com]]
